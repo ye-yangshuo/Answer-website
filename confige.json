@@ -6,5 +6,9 @@
 
     "filter_path" : "D:/code/python_code/ai/zhipu/.vscode/trans_data/trans_filter.txt",
 
+    "filtered_output_path" : "D:/code/python_code/ai/zhipu/.vscode/trans_data/trans_filtered.txt",
+
     "transjson_path" : "D:/code/python_code/ai/zhipu/.vscode/trans_data/trans_filter.json"
+
+
 }
