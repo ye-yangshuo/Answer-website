@@ -4,7 +4,7 @@ import LoginRegister from '../view/LoginRegister.vue'
 
 const routes = [
     {
-        path : '/',
+        path : '/login',
         //TODO不知道view可不可以
         view : LoginRegister
     }

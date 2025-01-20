@@ -3,7 +3,7 @@ import App from './App.vue'
 import './style.css'
 
 import axios from 'axios'
-import router from "./src/router/index";
+import router from "./router/index";
 
 //创建app
 const app = createApp(App)
