@@ -1,13 +1,28 @@
 import {createRouter, createWebHistory} from 'vue-router'
+import Introduce from '../view/introduce.vue'
 import LoginRegister from '../view/LoginRegister.vue'
+import Home from '../view/Home.vue'
+
 
 
 const routes = [
     {
+        path : '/',
+        component : Introduce
+    },
+
+    {
         path : '/login',
-        //TODO不知道view可不可以
-        view : LoginRegister
-    }
+        component : LoginRegister
+    },
+
+    {
+        path : '/home',
+        component : Home
+    },
+
+
+
 
 ]
 

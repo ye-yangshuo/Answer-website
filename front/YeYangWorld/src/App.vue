@@ -1,11 +1,13 @@
 <script setup>
-import LoginRegister from './view/LoginRegister.vue';
+
+import { RouterView } from 'vue-router';
+
 
 </script>
 
 <template>
-<LoginRegister></LoginRegister>
 
+<router-view></router-view>
 </template>
 
 <style scoped>
