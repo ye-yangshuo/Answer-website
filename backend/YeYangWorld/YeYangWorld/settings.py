@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',  
 
+    
+
     'corsheaders',
 
     'datiApp',
@@ -141,7 +143,29 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# CORS跨域请求
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ('*')
+CORS_ALLOW_CREDENTIALS = True  # 允许携带凭据
+CORS_ALLOW_METHODS = ('*')
+CORS_ALLOW_HEADERS = (
+    'content-type',
+)
+
+#邮件配置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = '2079789937@qq.com'
+EMAIL_HOST_PASSWORD = 'pjgplfilwuoiceeh'
+EMAIL_USE_TLS = True 
+
+#session配置
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# Session Cookie的名称
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+
