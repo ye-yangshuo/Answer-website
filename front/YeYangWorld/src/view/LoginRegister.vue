@@ -7,8 +7,7 @@ import Register from '../components/register.vue';
 
 
 <template>
-
-<Login></Login>
+    <Register></Register>
 
 
 </template>
