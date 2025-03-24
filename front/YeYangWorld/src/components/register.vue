@@ -43,35 +43,39 @@ const password2_ok = ref(false)
 const code_ok = ref(false)
 
 const sendcode = () => {
-    axios.post('/sendcode/', {
+    axios.post('/user/send_code/', {
         email : email.value
     }).then(res => {
         console.log(res)
     })
 }
+
 const register = () => {
+
     if(username.value.length > 6){
         username_ok.value = true
         return
     }
-    if(password.value != password2.value){
+    else{
+        username_ok.value = false
+    }
+    
+    if(password.value != password2.value ){
         password2_ok.value = true
         return
     }
+    else{
+        password2_ok.value = false
+    }
 
-    axios.post('/register_verify/', {
+    axios.post('/user/register_verify/', {
         username: username.value,
         password: password.value,
         email: email.value,
         code: code.value,
         phone: phone.value
     }).then(res => {
-        if(res.data.code == 200){
-            alert('注册成功')
-            window.location.href = '/login'
-        }else{
-            alert('注册失败')
-        }
+        console.log(res)
     })
 }
 

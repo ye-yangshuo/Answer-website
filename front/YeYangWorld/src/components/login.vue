@@ -24,7 +24,7 @@
 
 
   const login = () => {
-    axios.post('/login_verify/', {
+    axios.post('/user/login_verify/', {
       username: username.value,
       password: password.value
     }).then(response => {

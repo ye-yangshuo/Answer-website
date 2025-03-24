@@ -18,15 +18,15 @@ Including another URLconf
 from django.urls import path
 from django.contrib import admin
 
-from userApp.views import login_verify , sendcode , register_verify
+from userApp.views import login_verify , send_code , register_verify
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('/user/login_verify/',login_verify, name='login_verify'),
+    path('user/login_verify/',login_verify, name='login_verify'),
 
-    path('/user/sendcode/',sendcode, name='sendcode'),
+    path('user/send_code/',send_code, name='send_code'),
 
-    path('/user/register_verify/',register_verify, name='register_verify')
+    path('user/register_verify/',register_verify, name='register_verify')
 
 ]
