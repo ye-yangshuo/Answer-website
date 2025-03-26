@@ -15,11 +15,18 @@ def login_verify(request):
         data = json.loads(request.body)
         username = data['username']
         password = data['password']
+        
         try:
             user = DtwzUser.objects.get(name=username, password=password)
-            return JsonResponse({'status': 'success', 'message': '登录成功', 'user_id': user.id})
+            return JsonResponse(
+                {'status': 'success', 
+                 'message': '登录成功', 
+                 'username': user.name})
         except DtwzUser.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': '用户名或密码无效'})
+            return JsonResponse(
+                {'status': 'error',
+                 'message': '账号或密码错误'})
+        
     else:
         return JsonResponse({'status': 'error', 'message': '无效的请求方法'})
 

@@ -2,14 +2,12 @@
 
   <div class="login">
     <p class="login_title">登录</p>
-    <div class="login_form" >
-      <input type="text" placeholder="用户名" class="login_username" v-model = "username">
-      <input type="password" placeholder="密码" class="login_password" v-model = "password">
-      <button class="login_button" @click = "login">登录</button>
-      <div class="go_register" @click = "goregister">没有账号？去注册</div>
-      <div class="get_password" @click = "getpassword">忘记密码？</div>
-    </div>
-
+    <input type="text" placeholder="用户名" class="login_username" v-model = "username">
+    <input type="password" placeholder="密码" class="login_password" v-model = "password">
+    <button class="login_button" @click = "login">登录</button>
+    <div class="login_message" v-if="error">{{error}}</div>
+    <div class="go_register" @click = "goregister">没有账号？去注册</div>
+    <div class="get_password" @click = "getpassword">忘记密码？</div>
   </div>
   </template>
   
@@ -19,43 +17,38 @@
   import { ref,inject} from 'vue'
 
   const axios = inject('axios')
-  
+
   const username = ref('')
   const password = ref('')
+  const error = ref(null)
+  async function login()
+  {
+    const response = await axios.post('/user/login_verify/',{
+      username: username.value, password: password.value
+    })
+    console.log(response.data)
+    if(response.data.status == 'success')
+    {
+      alert('登录成功')
+      error.value = null
+    }
+    else
+    {
+      error.value = response.data.message
+    }
+  }
 
   const isregister = ref(true)
   const ispassword = ref(false)
   const emit = defineEmits(['isregister', 'ispassword'])
-
-
-  const login = () => {
-    axios.post('/user/login_verify/', {
-      username: username.value,
-      password: password.value
-    }).then(response => {
-      console.log(response.data)
-      if (response.data.code === 200) {
-        alert('登录成功')
-      } 
-      else {
-        alert('用户名或密码错误')
-      }
-    }).catch(error => {
-      console.log(error)
-    })
+  function goregister()
+  {
+    emit('isregister', isregister)
   }
-  
-  const goregister = () => {
-   emit('isregister', isregister)
-  }
-
-  const getpassword = () => {
+  function getpassword () 
+  {
     window.location.href = '/getpassword'
   }
-
-  
-  
-  
   </script>
 
 
@@ -68,7 +61,7 @@
   
   /*长宽设置 */
   width: 400px;
-  height: 500px;
+  height: 480px;
 
   /*居中设置*/
   position: absolute;
@@ -84,28 +77,13 @@
   
 }
 
-
-
 .login_title {    
     /* 字体设置 */
     font-size: 40px;
     font-weight: bold;
     color: #2e3335;
+    margin-bottom: 5%;
 }
-
-
-.login_form {
-    /* 长宽设置 */
-    width: 400px;
-    height: 300px;
-
-    /* 居中设置 */
-    position: absolute;
-    top: 54%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 
 .login_username, .login_password{
     /* 长宽设置 */
@@ -117,7 +95,7 @@
     border-radius: 20px;
 
     /* 间隔设置 */
-    margin: 20px;
+    margin: 15px;
     
     /*背景设置*/
     background-color: #d8f0f0;
@@ -127,13 +105,14 @@
     font-weight: bold;
     color: #1b2222;
 }
+
 .login_button {
     /* 长宽设置 */
     width: 80px;
     height: 50px;
 
     /* 间隔设置 */
-    margin : 7%;
+    margin : 8%;
 
     /* 颜色设置 */
     background-color: #26f0f0;  
@@ -143,6 +122,19 @@
     font-size :  17px;
 }
 
+.login_message{
+    /* 位置设置 */
+    position: absolute;
+    top: 55%;
+    left: 27%;
+    transform: translate(-50%, -50%);
+
+    /* 字体设置 */
+    font-size: 15px;    
+    font-weight: bold;
+    color: #ff0000;
+}
+
 .go_register {
 
   /*长宽设置*/
@@ -150,7 +142,7 @@
   height: 50px;
   /*位置设置*/
   position: absolute;
-  top: 90%;
+  top: 80%;
   left: 15%;
   transform: translate(-50%, -50%);
 
@@ -168,7 +160,7 @@
   height: 50px;
   /*位置设置*/
   position: absolute;
-  top: 90%;
+  top: 80%;
   left: 70%;
   transform: translate(-50%, -50%);
   /*间隔设置*/
