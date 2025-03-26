@@ -1,8 +1,4 @@
 <template>
-
-<div class="background">
-</div>
-
 <div class="register">
     <p class="title">注册</p>
     <div class="input">
@@ -13,8 +9,10 @@
         <input type="text" placeholder="验证码" v-model = 'code'>
         <input type="text" placeholder="手机号" v-model = 'phone'>
         <button class = 'sendcode' @click = 'sendcode'>发送验证码</button>
+        <button class="button" @click = "register">注册</button>
+        <div class='isregister' @click = "gologin">返回登录</div>
     </div>
-    <button class="button" @click = "register">注册</button>
+
     <div class = "warning">
         <p class='warn1' v-show = "username_ok">用户姓名不得大于6个字符</p>
         <p class='warn2' v-show  = "password2_ok">密码不一致</p>
@@ -41,6 +39,9 @@ const phone = ref('')
 const username_ok = ref(false)
 const password2_ok = ref(false)
 const code_ok = ref(false)
+
+const isregister = ref(false)
+const emit = defineEmits(['isregister'])
 
 const sendcode = () => {
     axios.post('/user/send_code/', {
@@ -79,6 +80,10 @@ const register = () => {
     })
 }
 
+const gologin = () => {
+    emit('isregister',isregister.value)
+}
+
 
 </script>
 
@@ -87,28 +92,6 @@ const register = () => {
 
 
 <style scoped>
-
-.background {  
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-
-    background-image: url("../public/background_img.jpeg");
-
-    /* 背景图垂直、水平均居中 */
-    background-position: center center;
-    /* 背景图不平铺 */
-    background-repeat: no-repeat;
-    /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
-    background-attachment: fixed;
-    /* 让背景图基于容器大小伸缩 */
-    background-size: cover;
-    /* 设置背景颜色，背景图加载过程中会显示背景色 */
-    background-color: #464646;
-}
 
 
 
