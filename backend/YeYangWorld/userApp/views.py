@@ -44,13 +44,15 @@ def send_code(request):
         data = json.loads(request.body)
         to_email = data['email']
 
-        email = Email(to_email = to_email)
-        code = email.send_code()
-        request.session['code'] = code
+        try:
+            DtwzUser.objects.get(email=to_email)
+            return JsonResponse({'status': 'error', 'message': '该邮箱已被注册'})
+        except DtwzUser.DoesNotExist:
+            email = Email(to_email = to_email)
+            code = email.send_code()
+            request.session['code'] = code
+            return JsonResponse({'status': 'success', 'message': '验证码发送成功'})
 
-
-
-        return JsonResponse({'status': 'success', 'message': '验证码发送成功'})
     else:
         return JsonResponse({'status': 'error', 'message': '无效的请求方法'})
 
@@ -72,7 +74,7 @@ def register_verify(request):
         if code == session_code and expire_time > 0:
 
             try:
-                user = DtwzUser.objects.get(name=username)
+                user = DtwzUser.objects.get(name=username, password=password, email=email, phone=phone)
                 request.session.delete('code')
                 return JsonResponse({'status': 'error', 'message': '用户名已存在'})
             except DtwzUser.DoesNotExist:

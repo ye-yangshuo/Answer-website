@@ -43,13 +43,13 @@ const code_ok = ref(false)
 const isregister = ref(false)
 const emit = defineEmits(['isregister'])
 
-const sendcode = () => {
-    axios.post('/user/send_code/', {
-        email : email.value
-    }).then(res => {
-        console.log(res)
-    })
+async function sendcode()
+{
+    const response = await axios.post('/user/send_code/', {email : email.value})
+    console.log(response)
 }
+
+
 
 const register = () => {
 
