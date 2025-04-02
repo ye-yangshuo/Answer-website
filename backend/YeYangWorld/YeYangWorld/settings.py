@@ -145,11 +145,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS跨域请求
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_CREDENTIALS = True  # 允许携带凭据
 CORS_ALLOW_METHODS = ('*')
 CORS_ALLOW_HEADERS = (
     'content-type',
+    'authorization'
 )
 
 #邮件配置

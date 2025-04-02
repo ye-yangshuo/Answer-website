@@ -30,6 +30,8 @@
     if(response.data.status == 'success')
     {
       alert('登录成功')
+      sessionStorage.setItem('accessToken',response.data.token) 
+      console.log(sessionStorage.getItem('accessToken'))
       error.value = null
     }
     else
