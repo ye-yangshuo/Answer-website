@@ -2,7 +2,7 @@
     <div class="background">
     </div>
 
-    <login @isregister="receive" v-show="!is"></login>
+    <login @isregister="receive" @islogin=" receiver" v-show="!is"></login>
     <register @isregister="receive" v-show = 'is' ></register>
 </template>
 
@@ -12,10 +12,15 @@ import login from '../components/login.vue';
 import register from '../components/register.vue';
 
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const is = ref(false);
 const receive = (isregister) => {
     is.value = isregister.value;
+}
+const receiver = () => {
+    router.push('/home');
 }
 
 

@@ -17,6 +17,19 @@
   import { ref,inject} from 'vue'
   const axios = inject('axios')
 
+  const isregister = ref(true)
+  const ispassword = ref(false)
+  const islogin = ref(true)
+  const emit = defineEmits(['isregister', 'ispassword', 'islogin'])
+  function goregister()
+  {
+    emit('isregister', isregister)
+  }
+  function getpassword () 
+  {
+    window.location.href = '/getpassword'
+  }
+
   const email = ref('')
   const password = ref('')
   const error = ref(null)
@@ -29,6 +42,7 @@
     console.log(response.data)
     if(response.data.status == 'success')
     {
+      emit('islogin', islogin)
       alert('登录成功')
       sessionStorage.setItem('accessToken',response.data.token) 
       console.log(sessionStorage.getItem('accessToken'))
@@ -40,17 +54,7 @@
     }
   }
 
-  const isregister = ref(true)
-  const ispassword = ref(false)
-  const emit = defineEmits(['isregister', 'ispassword'])
-  function goregister()
-  {
-    emit('isregister', isregister)
-  }
-  function getpassword () 
-  {
-    window.location.href = '/getpassword'
-  }
+
   </script>
 
 
