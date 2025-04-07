@@ -2,7 +2,7 @@
 
   <div class="login">
     <p class="login_title">登录</p>
-    <input type="text" placeholder="用户名" class="login_username" v-model = "username">
+    <input type="text" placeholder="邮箱" class="login_email" v-model = "email">
     <input type="password" placeholder="密码" class="login_password" v-model = "password">
     <button class="login_button" @click = "login">登录</button>
     <div class="login_message" v-if="error">{{error}}</div>
@@ -15,16 +15,16 @@
 <script setup>
 
   import { ref,inject} from 'vue'
-
   const axios = inject('axios')
 
-  const username = ref('')
+  const email = ref('')
   const password = ref('')
   const error = ref(null)
+  
   async function login()
   {
     const response = await axios.post('/user/login_verify/',{
-      username: username.value, password: password.value
+      email: email.value, password: password.value
     })
     console.log(response.data)
     if(response.data.status == 'success')
@@ -87,7 +87,7 @@
     margin-bottom: 5%;
 }
 
-.login_username, .login_password{
+.login_email, .login_password{
     /* 长宽设置 */
     width: 300px;
     height: 40px;

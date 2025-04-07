@@ -13,11 +13,11 @@ def login_verify(request):
     if request.method == 'POST':
 
         data = json.loads(request.body)
-        username = data['username']
+        email = data['email']
         password = data['password']
         
         try:
-            user = DtwzUser.objects.get(name=username, password=password)
+            user = DtwzUser.objects.get(email=email, password=password)
             jwt = JWT()
             token = jwt.generate_token(user.id)
 
@@ -51,6 +51,7 @@ def send_code(request):
             email = Email(to_email = to_email)
             code = email.send_code()
             request.session['code'] = code
+            request.session['email'] = to_email
             return JsonResponse({'status': 'success', 'message': '验证码发送成功'})
 
     else:
@@ -70,9 +71,10 @@ def register_verify(request):
 
         expire_time = request.session.get_expiry_age() 
         session_code = request.session.get('code')
-
+        session_email = request.session.get('email')
+        if email != session_email:
+            return JsonResponse({'status': 'error', 'message': '邮箱不匹配'})
         if code == session_code and expire_time > 0:
-
             try:
                 user = DtwzUser.objects.get(name=username, password=password, email=email, phone=phone)
                 request.session.delete('code')
