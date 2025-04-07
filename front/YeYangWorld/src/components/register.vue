@@ -8,15 +8,15 @@
         <input type="text" placeholder="邮箱" v-model = 'email'>
         <input type="text" placeholder="验证码" v-model = 'code'>
         <input type="text" placeholder="手机号" v-model = 'phone'>
-        <button class = 'sendcode' @click = 'sendcode'>发送验证码</button>
-        <button class="button" @click = "register">注册</button>
-        <div class='isregister' @click = "gologin">返回登录</div>
     </div>
+    <button class = 'sendcode' @click = 'sendcode'>发送验证码</button>
+    <button class="register_button" @click = "register">注册</button>
+    <div class='isregister' @click = "gologin">返回登录</div>
 
     <div class = "warning">
-        <p class='warn1' v-show = "username_ok">用户姓名不得大于6个字符</p>
-        <p class='warn2' v-show  = "password2_ok">密码不一致</p>
-        <p class='warn3' v-show = "code_ok">验证码错误</p>
+        <div class='warn1' v-show = "warn[0]">存在未填信息</div>
+        <div class='warn2' v-show  = "warn[1]">用户姓名不得大于6个字符</div>
+        <div class='warn3' v-show = "warn[2]">密码不一致</div>
     </div>
 
 </div>
@@ -26,7 +26,6 @@
 <script setup>
 
 import { ref,inject} from 'vue'
-
 const axios = inject('axios')
 
 const username = ref('')
@@ -35,13 +34,7 @@ const password2 = ref('')
 const email = ref('')
 const code = ref('')
 const phone = ref('')
-
-const username_ok = ref(false)
-const password2_ok = ref(false)
-const code_ok = ref(false)
-
-const isregister = ref(false)
-const emit = defineEmits(['isregister'])
+const warn = ref([false,false,false,false])
 
 async function sendcode()
 {
@@ -50,38 +43,46 @@ async function sendcode()
 }
 
 
-
-const register = () => {
-
+async function register()
+{   
+    if (username.value.length < 1 || password.value.length < 1 || code.value.length < 1 || phone.value.length < 1){
+        warn.value[0] = true
+        console.log(warn[0])
+        return
+    }
+    else{
+        warn.value[0] = false
+    }
     if(username.value.length > 6){
-        username_ok.value = true
+        warn.value[1] = true
         return
     }
     else{
-        username_ok.value = false
+        warn.value[1] = false
     }
-    
     if(password.value != password2.value ){
-        password2_ok.value = true
+        warn.value[2] = true
         return
     }
     else{
-        password2_ok.value = false
+        warn.value[2] = false
     }
-
-    axios.post('/user/register_verify/', {
+    response = await axios.post('/user/register_verify/', {
         username: username.value,
         password: password.value,
         email: email.value,
         code: code.value,
         phone: phone.value
-    }).then(res => {
-        console.log(res)
     })
+    console.log(response)
+
 }
 
-const gologin = () => {
-    emit('isregister',isregister.value)
+const isregister = ref(false)
+const emit = defineEmits(['isregister'])
+function gologin()
+{
+    emit('isregister',isregister)
 }
 
 
@@ -92,7 +93,73 @@ const gologin = () => {
 
 
 <style scoped>
+.register
+{
+    /*长宽设置 */
+  width: 400px;
+  height: 480px;
 
+  /*居中设置*/
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+
+  /*背景设置*/
+  border-radius: 10px;  
+  box-shadow: 
+  10px 10px 10px #3a4141,
+  -10px -10px 10px #3a4141;
+
+
+}
+.title{
+    text-align: center;
+    margin-top: 2%;
+    margin-bottom: 5%;
+    font-size: 30px;
+}
+
+.input {
+  width: 100%; /* 使输入框宽度自适应 */
+  margin-bottom: 5%;
+}
+
+.input input {
+  width: 80%; /* 输入框占满整个输入区域 */
+  padding: 2%;
+  margin-bottom: 3%; /* 输入框之间的间距 */
+}
+
+.email{
+    width: 10%;
+    padding: 10%;
+}
+.sendcode{
+    width:20%;
+    height:10%;
+    font-size: 5%;
+}
+.register_button{
+    width:15%;
+    height:10%;
+    font-size: 5%;
+
+}
+
+
+.warning {
+  width: 100%; /* 警告信息宽度自适应 */
+  margin-top: 10px;
+}
+
+.warn1, .warn2, .warn3 {
+  padding: 10px;
+  background-color: #ffcccc; /* 警告信息的背景颜色 */
+  color: red; /* 警告信息的文字颜色 */
+  margin-top: 5px; /* 警告信息之间的间距 */
+  box-sizing: border-box;
+}
 
 
 </style>
