@@ -87,3 +87,15 @@ def register_verify(request):
         else:
             return JsonResponse({'status': 'error', 'message': '验证码错误或已过期'})
         
+@csrf_exempt
+def user_verify(request):
+    if request.method == 'POST':
+        token = request.META.get('HTTP_AUTHORIZATION')
+        token = token.split(' ')[1]
+        jwt = JWT()
+        result = jwt.verify_token(token)
+        return JsonResponse({'result' : result})
+
+    else:
+        return JsonResponse({'status': 'error', 'message': '请求方式错误'})
+
