@@ -4,7 +4,7 @@ import axiosInstance from '../utils/GlobalAxios';
 
 import LoginRegister from '../view/LoginRegister.vue'
 import Home from '../view/Home.vue'
-
+import Ansewer from '../view/Answer.vue'
 
 
 
@@ -18,6 +18,11 @@ const routes = [
         path : '/home',
         component : Home
     },
+
+    {
+        path : '/ansewer',
+        component : Ansewer
+    }
 ]
 
 const router = createRouter({
