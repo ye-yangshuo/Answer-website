@@ -19,7 +19,6 @@
 
   const isregister = ref(true)
   const ispassword = ref(false)
-  const islogin = ref(true)
   const emit = defineEmits(['isregister', 'ispassword', 'islogin'])
   function goregister()
   {
@@ -42,11 +41,13 @@
     console.log(response.data)
     if(response.data.status == 'success')
     {
-      emit('islogin', islogin)
+
       alert('登录成功')
+      //将token存入sessionStorage
       sessionStorage.setItem('accessToken',response.data.token) 
       console.log(sessionStorage.getItem('accessToken'))
       error.value = null
+      emit('islogin')
     }
     else
     {
