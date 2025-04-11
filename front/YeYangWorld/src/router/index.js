@@ -4,7 +4,7 @@ import axiosInstance from '../utils/GlobalAxios';
 
 import LoginRegister from '../view/LoginRegister.vue'
 import Home from '../view/Home.vue'
-import Ansewer from '../view/Answer.vue'
+import Answer from '../view/Answer.vue'
 
 
 
@@ -20,8 +20,8 @@ const routes = [
     },
 
     {
-        path : '/ansewer',
-        component : Ansewer
+        path : '/answer',
+        component : Answer
     }
 ]
 
