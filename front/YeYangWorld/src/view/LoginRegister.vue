@@ -1,9 +1,10 @@
 <template>
-    <div class="background">
+    <div class="loginRegister">
+
+        <login @isregister="receive" @islogin="receiver" v-show="!is"></login>
+        <register @isregister="receive" v-show='is'></register>
     </div>
 
-    <login @isregister="receive" @islogin=" receiver" v-show="!is"></login>
-    <register @isregister="receive" v-show = 'is' ></register>
 </template>
 
 
@@ -32,15 +33,12 @@ const receiver = () => {
 
 
 <style scoped>
-
-.background {  
+.loginRegister {
     width: 100%;
     height: 100%;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    z-index: -1;
-
     background-image: url("../public/background_img.jpeg");
 
     /* 背景图垂直、水平均居中 */
@@ -54,6 +52,4 @@ const receiver = () => {
     /* 设置背景颜色，背景图加载过程中会显示背景色 */
     background-color: #464646;
 }
-
-
 </style>

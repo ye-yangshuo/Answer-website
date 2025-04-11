@@ -20,17 +20,18 @@
 <style scoped>
 .top_navigation{
   width: 100%;
-  height: 12%;
+  height: 10%;
   background-color: #ffffff;
+
   position: fixed;
   top: 0;
   left: 0;
+
   z-index: 9999;
 }
 .logo{
-  width: 10%;
+  width: 8%;
   height: 100%;
-
   position: absolute;
   left:2%;
 
@@ -44,6 +45,7 @@
   display: flex;
   justify-content: space-between; 
   align-items: center; 
+
   position: absolute;
   top: 50%;
   left: 50%;
@@ -51,8 +53,7 @@
   width: 50%; 
 }
 .nav-item {
-  font-size: 25px;
-  font-weight: bold;
+  font-size: 3vh;
   color: #000000;
   text-decoration: none;
 }
