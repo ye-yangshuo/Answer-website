@@ -4,7 +4,7 @@
     </a>
     <div class="nav-container">
       <router-link class='nav-item home' to="/home">首页</router-link> 
-      <router-link class='nav-item answer' to="/answer">答题</router-link>
+      <router-link class='nav-item answer' to="/questiontype1">答题</router-link>
       <router-link class='nav-item read' to="/read">阅读</router-link>
       <router-link class='nav-item plan' to="/plan">计划</router-link>
     </div>

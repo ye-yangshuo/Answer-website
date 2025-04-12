@@ -1,37 +1,45 @@
 <template>
     <div class="answer">
 
-        <navigate></navigate>
+        <threelayout>
+            <template v-slot:header><navigate></navigate></template>
 
-        <div class="container">
-            <div class="left">
+            <template v-slot:left>
                 <div class="left_top">题型</div>
                 <div class="left_table">
                     <div class='table_item item1' @click="">常识判断</div>
                 </div>
-            </div>
+            </template>
 
-            <div class="main">
+            <template v-slot:main>
+                <div class="question_table">
+                    <div class="main_title">单选题</div>
+                    <div class="main_question">{{question}}</div>
+                    <div class="main_answer">
+                        <div class="answer_item" v-for="(item,index) in answer" :key="index">{{item}}</div>
+                    </div>
+                    <div class="main_analysis">解析：{{analysis}}</div>
+                </div>
+            </template>
 
-            </div>
-
-            <div class="right">
+            <template v-slot:right>
                 <div class="right_table">
                     <div class="right_history">历史记录</div>
                     <div class="right_collection">收藏</div>
                     <div class="right_note">笔记</div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </template>
 
+        </threelayout>
+
+    </div>
 </template>
 
 
 <script setup>
 
+import threelayout from '../components/threelayout.vue'
 import navigate from '../components/navigate.vue'
-
 
 </script>
 
@@ -44,34 +52,13 @@ import navigate from '../components/navigate.vue'
     left: 0;
 }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    position: absolute;
-    top: 10%;
-    left: 0%;
-    background-color: #c9c3c3;
-}
+
 
 /*主要内容*/
-.main {
-    position: fixed;
-    left: 12%;
-    right: 18%;
-    height: 100%;
-    background-color: #f9f1f1;
-    overflow-y: auto;
-}
+
 
 /*左侧栏*/
-.left {
-    position: fixed;
-    left: 0%;
-    width: 12%;
-    height: 90%;
-    background-color: #f9f1f1;
-}
+
 
 .left_top {
     position: absolute;
@@ -109,14 +96,7 @@ import navigate from '../components/navigate.vue'
 
 
 /*右侧栏 */
-.right {
-    position: fixed;
-    right: 0%;
-    width: 18%;
-    height: 90%;
-    background-color: #f9f1f1;
-    overflow-y: auto;
-}
+
 
 .right_table {
     display: flex;
