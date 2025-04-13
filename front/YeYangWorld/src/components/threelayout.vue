@@ -47,16 +47,16 @@ import navigate from '../components/navigate.vue'
     position: absolute;
     top: 10%;
     left: 0%;
-    background-color: #c9c3c3;
+    background-color: #F5F7FA;
 }
 
 /*主要内容*/
 .main {
     position: fixed;
-    left: 12%;
-    right: 18%;
+    left: 15%;
+    right: 15%;
     height: 100%;
-    background-color: #f9f1f1;
+    background-color: #F5F7FA;
     overflow-y: auto;
 }
 
@@ -64,18 +64,18 @@ import navigate from '../components/navigate.vue'
 .left {
     position: fixed;
     left: 0%;
-    width: 12%;
+    width: 15%;
     height: 90%;
-    background-color: #f9f1f1;
+    background-color: #F5F7FA;
 }
 
 /*右侧栏 */
 .right {
     position: fixed;
     right: 0%;
-    width: 18%;
+    width: 15%;
     height: 90%;
-    background-color: #f9f1f1;
+    background-color: #F5F7FA;
     overflow-y: auto;
 }
 
