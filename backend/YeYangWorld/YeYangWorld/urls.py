@@ -19,6 +19,8 @@ from django.urls import path
 from django.contrib import admin
 
 from userApp.views import login_verify , send_code , register_verify, user_verify
+
+from datiApp.views import get_problem
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -28,5 +30,7 @@ urlpatterns = [
 
     path('user/register_verify/',register_verify, name='register_verify'),
 
-    path('user/user_verify/',user_verify, name='user_verify')
+    path('user/user_verify/',user_verify, name='user_verify'),
+
+    path('dati/get_problem/',get_problem, name='get_problem')
 ]
