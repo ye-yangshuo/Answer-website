@@ -18,11 +18,11 @@
 
                 <div class="question_table">
 
-                    <div class="main_title">常识判断</div>
+                    <div class="main_title" @click="getproblem">常识判断</div>
 
-                    <div class="main_collection">收藏</div>
+                    <div class="main_collect" @click="collect">收藏</div>
 
-                    <div class="main_question">{{question}}</div>
+                    <div class="main_question" >{{question}}</div>
 
                     <div class="main_options">
                         <div class="optionA" >
@@ -76,10 +76,24 @@
 import threelayout from '../components/threelayout.vue'
 import navigate from '../components/navigate.vue'
 
-import { ref } from 'vue'
-const question = ref('属于国家一类保护动物的是？')
-const options = ref(['熊猫','大熊猫','熊猫熊','熊猫猫'])
-const analysis = ref('属于国家一类保护动物的是？')
+import { onMounted, ref ,inject} from 'vue'
+const axios = inject('axios')
+
+const question = ref('')
+const options = ref([])
+const analysis = ref('')
+
+
+async function getproblem(){
+    const res = await axios.get('/dati/get_problem/')
+    const data = await res.data
+    console.log(data)
+    // question.value = data.question
+    // options.value = data.options
+    // analysis.value = data.analysis
+}
+
+// onMounted(getproblem())
 
 </script>
 
