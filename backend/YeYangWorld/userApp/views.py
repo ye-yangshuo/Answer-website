@@ -1,11 +1,11 @@
 from django.views.decorators.csrf import csrf_exempt
 
 from django.http import JsonResponse
-from userApp.models import DtwzUser
 import json
 
+from userApp.models import DtwzUser
 from myutils import Email,JWT
-
+jwt = JWT()
 #登入验证
 @csrf_exempt
 def login_verify(request):
@@ -92,7 +92,6 @@ def user_verify(request):
     if request.method == 'POST':
         token = request.META.get('HTTP_AUTHORIZATION')
         token = token.split(' ')[1]
-        jwt = JWT()
         result = jwt.verify_token(token)
         return JsonResponse({'result' : result})
 
