@@ -18,39 +18,43 @@
 
                 <div class="question_table">
 
-                    <div class="main_title" @click="getproblem">常识判断</div>
+                    <div class="main_title">常识判断</div>
 
                     <div class="main_collect" @click="collect">收藏</div>
 
-                    <div class="main_question" >{{question}}</div>
+                    <div class="main_question" >{{now_question}}</div>
 
                     <div class="main_options">
                         <div class="optionA" >
                             <div class="optionA_title">A</div>
-                            <div class="optionA_content">{{options[0]}}</div>
+                            <div class="optionA_content">{{now_options[0]}}</div>
                         </div>
                         <div class="optionB">
                             <div class="optionB_title">B</div>
-                            <div class="optionB_content">{{options[1]}}</div>
+                            <div class="optionB_content">{{now_options[1]}}</div>
                         </div>
                         <div class="optionC">
                             <div class="optionC_title">C</div>
-                            <div class="optionC_content">{{options[2]}}</div>
+                            <div class="optionC_content">{{now_options[2]}}</div>
                         </div>
                         <div class="optionD">
                             <div class="optionD_title">D</div>
-                            <div class="optionD_content">{{options[3]}}</div>
+                            <div class="optionD_content">{{now_options[3]}}</div>
                         </div>
                     </div>
 
-                    <div class="main_analysis">解析：{{analysis}}</div>
+                    <div class="main_analysis">解析：{{now_explanation}}</div>
 
                 </div>
 
-                <div class="main_button">
-                    <button class="button1">上一题</button>
-                    <button class="button2">下一题</button>
+                <div class="main_bottom">
+                    <button class="main_button">下一题</button>
+                    <input class="main_note" type="txet" placeholder="笔记" v-model="now_note"></input>
                 </div>
+                    
+
+
+
 
             </template>
 
@@ -60,6 +64,7 @@
                     <div class="right_history">历史记录</div>
                     <div class="right_collection">收藏</div>
                     <div class="right_note">笔记</div>
+                    
                 </div>
 
             </template>
@@ -76,26 +81,46 @@
 import threelayout from '../components/threelayout.vue'
 import navigate from '../components/navigate.vue'
 
-import { onMounted, ref ,inject} from 'vue'
+import { onBeforeMount, ref ,inject} from 'vue'
 const axios = inject('axios')
 
-const question = ref('')
-const options = ref([])
-const analysis = ref('')
+const now_question = ref('')
+const now_options = ref([])
+const now_explanation = ref('')
+const now_answer = ref('')
+const now_note = ref('')
+
+const next_question = ref('')
+const next_options = ref([])
+const next_explanation = ref('')
+const next_answer = ref('')
 
 
 async function getproblem(){
-    const res = await axios.get('/dati/get_problem/')
-    const data = await res.data
-    console.log(data)
-    // question.value = data.question
-    // options.value = data.options
-    // analysis.value = data.analysis
-}
+    const response = await axios.get('/dati/get_problem/')
+    const data = response.data
+    const now_problem = data.now_problem
+    const next_problem = data.next_problem
 
-// onMounted(getproblem())
+    
+    now_question.value = now_problem.question
+    now_options.value = [now_problem.option_a, now_problem.option_b, now_problem.option_c, now_problem.option_d]
+    now_answer.value = now_problem.answer
+    now_explanation.value = now_problem.explanation
+    console.log(now_answer.value)
+
+    next_question.value = next_problem.question
+    next_options.value = [next_problem.option_a, next_problem.option_b, next_problem.option_c, next_problem.option_d]
+    next_answer.value = next_problem.answer
+    next_explanation.value = next_problem.explanation
+
+}
+onBeforeMount(getproblem)
+
 
 </script>
+
+
 
 <style scoped>
 .questiontype1 {
@@ -136,7 +161,7 @@ async function getproblem(){
     text-align: center;
     background-color: #000000;
 }
-.main_collection{
+.main_collect{
     position: absolute;
     top:4%;
     right:6%;
@@ -187,38 +212,32 @@ async function getproblem(){
     text-align: left;
 }
 
-
-
-
 .main_button{
     position:absolute;
     top:79%;
-    left:8%;
-    width:80%;
+    left:5%;
+
+    width:9%;
     height:9%;  
-}
-.button1 {  
-    position: absolute;
-    left:0%;
 
-    width:10%;
-    height:100%;
-    background-color: #c4bbbb;
-
+    background-color: #8da9f1;
     color:#000000;
     font-size: 2vh;
+    text-align: center;
 }
-.button2 {
-    position: absolute;
-    left:30%;
+.main_note{
+    position:absolute;
+    top:80%;
+    left:22%;
 
-    width:10%;
-    height:100%;
-    background-color: #c4bbbb;
+    width:70%;
+    height:7%;
 
+    background-color: #ffffff;
     color:#000000;
-    font-size: 2vh;
+    font-size: 4vh;
 }
+
 
 /*左侧栏*/
 .left_top {
