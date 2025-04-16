@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="main_bottom">
-                    <button class="main_button">下一题</button>
+                    <button class="main_button" @click="next_question">下一题</button>
                     <input class="main_note" type="txet" placeholder="笔记" v-model="now_note"></input>
                 </div>
                     
@@ -117,7 +117,22 @@ async function getproblem(){
 }
 onBeforeMount(getproblem)
 
+async function submitnote(){
+    const response = await axios.post('/dati/submit_note/', {
+        note: now_note.value
+    })
+    const data = response.data
+    console.log(data)
+}
 
+async function submitanswer() {
+    const response = await axios.post('/dati/submit_answer/', {
+        answer: now_answer.value
+    })
+    const data = response.data
+    console.log(data)
+
+}
 </script>
 
 
