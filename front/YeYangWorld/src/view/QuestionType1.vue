@@ -25,37 +25,32 @@
                     <div class="main_question" >{{now_question}}</div>
 
                     <div class="main_options">
-                        <div class="optionA" >
-                            <div class="optionA_title">A</div>
+                        <div class="optionA" @click="answer('A')"> 
+                            <div class="optionA_title" :style="options_color[0]">A</div>
                             <div class="optionA_content">{{now_options[0]}}</div>
                         </div>
-                        <div class="optionB">
-                            <div class="optionB_title">B</div>
+                        <div class="optionB" @click="answer('B')">
+                            <div class="optionB_title" :style="options_color[1]">B</div>
                             <div class="optionB_content">{{now_options[1]}}</div>
                         </div>
-                        <div class="optionC">
-                            <div class="optionC_title">C</div>
+                        <div class="optionC" @click="answer('C')">
+                            <div class="optionC_title" :style="options_color[2]">C</div>
                             <div class="optionC_content">{{now_options[2]}}</div>
                         </div>
-                        <div class="optionD">
-                            <div class="optionD_title">D</div>
+                        <div class="optionD" @click="answer('D')">
+                            <div class="optionD_title" :style="options_color[3]">D</div>
                             <div class="optionD_content">{{now_options[3]}}</div>
                         </div>
                     </div>
 
-                    <div class="main_analysis">解析：{{now_explanation}}</div>
+                    <div class="main_analysis" v-show=" show_analysis">解析：{{now_explanation}}</div>
 
                 </div>
 
                 <div class="main_bottom">
-                    <button class="main_button" @click="next_question">下一题</button>
+                    <button class="main_button" @click="nextproblem">下一题</button>
                     <input class="main_note" type="txet" placeholder="笔记" v-model="now_note"></input>
                 </div>
-                    
-
-
-
-
             </template>
 
             <template v-slot:right>
@@ -81,58 +76,105 @@
 import threelayout from '../components/threelayout.vue'
 import navigate from '../components/navigate.vue'
 
-import { onBeforeMount, ref ,inject} from 'vue'
+import { onBeforeMount, ref ,inject, resolveDirective} from 'vue'
 const axios = inject('axios')
 
+const now_id = ref('')
 const now_question = ref('')
 const now_options = ref([])
 const now_explanation = ref('')
 const now_answer = ref('')
 const now_note = ref('')
+const now_collection = ref(false)
 
-const next_question = ref('')
-const next_options = ref([])
-const next_explanation = ref('')
-const next_answer = ref('')
+// const next_question = ref('')
+// const next_options = ref([])
+// const next_explanation = ref('')
+// const next_answer = ref('')
 
 
 async function getproblem(){
     const response = await axios.get('/dati/get_problem/')
     const data = response.data
-    const now_problem = data.now_problem
-    const next_problem = data.next_problem
+    const now_problem_content = data.now_problem_content
+    const now_problem_id = data.now_problem_id
+    console.log(now_problem_content)
 
-    
-    now_question.value = now_problem.question
-    now_options.value = [now_problem.option_a, now_problem.option_b, now_problem.option_c, now_problem.option_d]
-    now_answer.value = now_problem.answer
-    now_explanation.value = now_problem.explanation
-    console.log(now_answer.value)
+    now_id.value = now_problem_id
+    now_question.value = now_problem_content.question
+    now_options.value = [now_problem_content.option_a, now_problem_content.option_b, now_problem_content.option_c, now_problem_content.option_d]
+    now_answer.value = now_problem_content.answer
+    now_answer.value = now_answer.value.trim()
+    now_explanation.value = now_problem_content.explanation
 
-    next_question.value = next_problem.question
-    next_options.value = [next_problem.option_a, next_problem.option_b, next_problem.option_c, next_problem.option_d]
-    next_answer.value = next_problem.answer
-    next_explanation.value = next_problem.explanation
+    // console.log(now_answer.value)
+    // const next_problem = data.next_problem
+    // next_question.value = next_problem.question
+    // next_options.value = [next_problem.option_a, next_problem.option_b, next_problem.option_c, next_problem.option_d]
+    // next_answer.value = next_problem.answer
+    // next_explanation.value = next_problem.explanation
 
 }
 onBeforeMount(getproblem)
 
-async function submitnote(){
-    const response = await axios.post('/dati/submit_note/', {
-        note: now_note.value
-    })
-    const data = response.data
-    console.log(data)
+const answerd = ref(false)
+const show_analysis = ref(false)
+const istrue = ref(false)
+const isselected = ref(false)
+
+const options_color = ref(['','','',''])
+const user_answer = ref('')
+const shuzi = {"A":"0", "B":"1", "C":"2", "D":"3"}
+const user_answer_shuzi = ref('')
+const now_answer_shuzi = ref('')
+
+function answer(data) {
+    if (answerd.value === false) {
+        user_answer.value = data
+        user_answer_shuzi.value = shuzi[user_answer.value]
+        now_answer_shuzi.value = shuzi[now_answer.value]
+        if (user_answer.value === now_answer.value) {
+            options_color.value[user_answer_shuzi.value] = 'background-color:#2BC8A0'
+            istrue.value = true
+            
+        }
+        else {
+            options_color.value[user_answer_shuzi.value] = 'background-color:#FF5A5A'
+            options_color.value[now_answer_shuzi.value] = 'background-color:#2BC8A0'
+        }
+        show_analysis.value = true
+        isselected.value = true
+    }
+    answerd.value = true
 }
 
-async function submitanswer() {
-    const response = await axios.post('/dati/submit_answer/', {
-        answer: now_answer.value
+async function submit(){
+    await axios.post('/dati/submit_problem/', {
+        problem_id : now_id.value,
+        istrue : istrue.value,
+        note: now_note.value,
+        collection : now_collection.value
     })
-    const data = response.data
-    console.log(data)
+}
+async function nextproblem() {
+    if (isselected.value === true) {
+        await submit()
+        answerd.value = false
+        show_analysis.value = false
+        istrue.value = false
+        options_color.value = ['', '', '', '']
+        now_note.value = ''
+        now_collection.value = false
+        isselected.value = false
+
+        getproblem()
+    }
+    else {
+        alert("请先选择答案")
+    }
 
 }
+
 </script>
 
 
