@@ -20,7 +20,10 @@
 
                     <div class="main_title">常识判断</div>
 
-                    <div class="main_collect" @click="collect">收藏</div>
+                    <div class="main_collect" @click="collect" >
+                        <el-icon :size="28" v-show="!iscollected"> <star/></el-icon>
+                        <el-icon :size="28" v-show="iscollected"><StarFilled /></el-icon>
+                    </div>
 
                     <div class="main_question" >{{now_question}}</div>
 
@@ -43,8 +46,9 @@
                         </div>
                     </div>
 
-                    <div class="main_analysis" v-show=" show_analysis">解析：{{now_explanation}}</div>
-
+                    <div class="main_analysis" v-show=" isanalysis">
+                        解析：{{now_explanation}}
+                    </div>
                 </div>
 
                 <div class="main_bottom">
@@ -59,7 +63,6 @@
                     <div class="right_history">历史记录</div>
                     <div class="right_collection">收藏</div>
                     <div class="right_note">笔记</div>
-                    
                 </div>
 
             </template>
@@ -71,28 +74,26 @@
 
 
 <script setup>
-
-
 import threelayout from '../components/threelayout.vue'
 import navigate from '../components/navigate.vue'
 
 import { onBeforeMount, ref ,inject, resolveDirective} from 'vue'
 const axios = inject('axios')
 
+//状态变量
+const isanswerd = ref(false)
+const isanalysis = ref(false)
+const istrue = ref(false)
+const isselected = ref(false)
+const iscollected = ref(false)
+
+//题目变量
 const now_id = ref('')
 const now_question = ref('')
 const now_options = ref([])
 const now_explanation = ref('')
 const now_answer = ref('')
 const now_note = ref('')
-const now_collection = ref(false)
-
-// const next_question = ref('')
-// const next_options = ref([])
-// const next_explanation = ref('')
-// const next_answer = ref('')
-
-
 async function getproblem(){
     const response = await axios.get('/dati/get_problem/')
     const data = response.data
@@ -106,75 +107,68 @@ async function getproblem(){
     now_answer.value = now_problem_content.answer
     now_answer.value = now_answer.value.trim()
     now_explanation.value = now_problem_content.explanation
-
-    // console.log(now_answer.value)
-    // const next_problem = data.next_problem
-    // next_question.value = next_problem.question
-    // next_options.value = [next_problem.option_a, next_problem.option_b, next_problem.option_c, next_problem.option_d]
-    // next_answer.value = next_problem.answer
-    // next_explanation.value = next_problem.explanation
-
 }
 onBeforeMount(getproblem)
 
-const answerd = ref(false)
-const show_analysis = ref(false)
-const istrue = ref(false)
-const isselected = ref(false)
-
-const options_color = ref(['','','',''])
+//点击选项
 const user_answer = ref('')
+const options_color = ref(['','','',''])
 const shuzi = {"A":"0", "B":"1", "C":"2", "D":"3"}
 const user_answer_shuzi = ref('')
 const now_answer_shuzi = ref('')
-
 function answer(data) {
-    if (answerd.value === false) {
+    if (isanswerd.value === false) {
         user_answer.value = data
         user_answer_shuzi.value = shuzi[user_answer.value]
         now_answer_shuzi.value = shuzi[now_answer.value]
         if (user_answer.value === now_answer.value) {
             options_color.value[user_answer_shuzi.value] = 'background-color:#2BC8A0'
             istrue.value = true
-            
         }
         else {
             options_color.value[user_answer_shuzi.value] = 'background-color:#FF5A5A'
             options_color.value[now_answer_shuzi.value] = 'background-color:#2BC8A0'
         }
-        show_analysis.value = true
+        isanalysis.value = true
         isselected.value = true
     }
-    answerd.value = true
+    isanswerd.value = true
 }
 
-async function submit(){
+
+//点击下一题
+async function submitproblem(){
     await axios.post('/dati/submit_problem/', {
         problem_id : now_id.value,
         istrue : istrue.value,
         note: now_note.value,
-        collection : now_collection.value
+        iscollect : iscollected.value
     })
 }
 async function nextproblem() {
     if (isselected.value === true) {
-        await submit()
-        answerd.value = false
-        show_analysis.value = false
+        await submitproblem()
+
+        //重置状态变量
+        isanswerd.value = false
+        isanalysis.value = false
         istrue.value = false
+        isselected.value = false
+        iscollected.value = false
         options_color.value = ['', '', '', '']
         now_note.value = ''
-        now_collection.value = false
-        isselected.value = false
 
         getproblem()
     }
     else {
         alert("请先选择答案")
     }
-
 }
 
+//点击收藏
+function collect(){
+    iscollected.value = !iscollected.value
+}
 </script>
 
 
@@ -187,8 +181,6 @@ async function nextproblem() {
     top: 0;
     left: 0;
 }
-
-
 
 /*主要内容*/
 .question_table{
@@ -216,12 +208,25 @@ async function nextproblem() {
 
     font-size: 3vh;
     text-align: center;
-    background-color: #000000;
+    color: #000000;
 }
 .main_collect{
     position: absolute;
-    top:4%;
-    right:6%;
+    top:5%;
+    right:10%;
+
+    width:5%;
+    color: #000000;
+}
+.main_question{
+    position:relative;
+    left:7%;
+    width:87%;
+}
+.main_collect{
+    position: absolute;
+    top:5%;
+    right:10%;
 
     color: #000000;
     font-size: 20px;
@@ -268,6 +273,7 @@ async function nextproblem() {
     color:#000000;
     text-align: left;
 }
+
 
 .main_button{
     position:absolute;
