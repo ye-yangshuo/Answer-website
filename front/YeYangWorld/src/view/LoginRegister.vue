@@ -39,7 +39,7 @@ const receiver = () => {
     position: absolute;
     top: 0;
     left: 0;
-    background-image: url("../public/background_img.jpeg");
+    background-image: url("../assets/userApp/background_img.jpeg");
 
     /* 背景图垂直、水平均居中 */
     background-position: center center;
