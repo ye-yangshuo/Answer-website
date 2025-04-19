@@ -2,9 +2,9 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import axiosInstance from '../utils/GlobalAxios';
 
-import LoginRegister from '../view/LoginRegister.vue'
-import Home from '../view/Home.vue'
-import QuestionType1 from '../view/QuestionType1.vue'
+import LoginRegister from '../view/userApp/LoginRegister.vue'
+import Home from '../view/public/Home.vue'
+import QuestionType1 from '../view/datiApp/QuestionType1.vue'
 
 
 

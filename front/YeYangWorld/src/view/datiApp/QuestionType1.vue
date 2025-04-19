@@ -74,10 +74,10 @@
 
 
 <script setup>
-import threelayout from '../components/threelayout.vue'
-import navigate from '../components/navigate.vue'
+import threelayout from '/src/components/threelayout.vue'
+import navigate from '/src/components/navigate.vue'
 
-import { onBeforeMount, ref ,inject, resolveDirective} from 'vue'
+import { onBeforeMount, ref ,inject} from 'vue'
 const axios = inject('axios')
 
 //状态变量

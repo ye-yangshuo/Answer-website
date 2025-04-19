@@ -35,7 +35,7 @@
   position: absolute;
   left:2%;
 
-  background-image: url('../assets/userApp/image.png');
+  background-image: url('/src/assets/userApp/image.png');
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;

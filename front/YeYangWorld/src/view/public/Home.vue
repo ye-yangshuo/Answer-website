@@ -10,7 +10,7 @@
 
 
 <script setup>
-import navigate from '../components/navigate.vue'
+import navigate from '/src/components/navigate.vue'
 
 
 </script>

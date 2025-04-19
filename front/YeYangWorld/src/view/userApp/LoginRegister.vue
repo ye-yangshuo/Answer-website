@@ -9,8 +9,8 @@
 
 
 <script setup>
-import login from '../components/login.vue';
-import register from '../components/register.vue';
+import login from '/src/components/login.vue';
+import register from '/src/components/register.vue';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -39,7 +39,7 @@ const receiver = () => {
     position: absolute;
     top: 0;
     left: 0;
-    background-image: url("../assets/userApp/background_img.jpeg");
+    background-image: url("/src/assets/userApp/background_img.jpeg");
 
     /* 背景图垂直、水平均居中 */
     background-position: center center;
