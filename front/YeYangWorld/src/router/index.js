@@ -5,7 +5,7 @@ import axiosInstance from '../utils/GlobalAxios';
 import LoginRegister from '../view/userApp/LoginRegister.vue'
 import Home from '../view/public/Home.vue'
 import QuestionType1 from '../view/datiApp/QuestionType1.vue'
-
+import ReadBegin from '../view/readApp/ReadBegin.vue'
 
 
 const routes = [
@@ -22,6 +22,11 @@ const routes = [
     {
         path : '/questiontype1',
         component : QuestionType1,
+    },
+
+    {
+        path : '/readbegin',
+        component : ReadBegin,
     }
 ]
 
