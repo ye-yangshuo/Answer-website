@@ -2,11 +2,11 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import axiosInstance from '../utils/GlobalAxios';
 
-import LoginRegister from '../view/userApp/LoginRegister.vue'
-import Home from '../view/public/Home.vue'
-import QuestionType1 from '../view/datiApp/QuestionType1.vue'
-import ReadBegin from '../view/readApp/ReadBegin.vue'
-
+import LoginRegister from '/src/view/userApp/LoginRegister.vue'
+import Home from '/src/view/public/Home.vue'
+import QuestionType1 from '/src/view/datiApp/QuestionType1.vue'
+import ReadBegin from '/src/view/readApp/ReadBegin.vue'
+import ToolBegin from '/src/view/toolApp/ToolBegin.vue'
 
 const routes = [
     {
@@ -27,6 +27,10 @@ const routes = [
     {
         path : '/readbegin',
         component : ReadBegin,
+    },
+    {
+        path : '/toolbegin',
+        component : ToolBegin,
     }
 ]
 
