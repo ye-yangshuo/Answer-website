@@ -1,6 +1,6 @@
 <template>
 <div class="register">
-    <p class="title">注册</p>
+    <div class="title">注册</div>
     <div class="input">
         <input type="text" placeholder="用户名" v-model = 'username' >
         <input type="password" placeholder="密码" v-model = 'password'>
@@ -97,12 +97,12 @@ function gologin()
 {
     /*长宽设置 */
   width: 400px;
-  height: 480px;
+  height: 500px;
 
   /*居中设置*/
-  position: absolute;
+  position: relative;
   top: 50%;
-  left: 48%;
+  left: 50%;
   transform: translate(-50%, -50%);
 
   /*背景设置*/
@@ -114,15 +114,19 @@ function gologin()
 
 }
 .title{
+    position: absolute;
+    top: 1%;
+    left: 43%;
     text-align: center;
-    margin-top: 2%;
-    margin-bottom: 5%;
     font-size: 30px;
 }
 
 .input {
+    position: absolute;
+    top: 14%;
+    left: 5%;
   width: 100%; /* 使输入框宽度自适应 */
-  margin-bottom: 5%;
+
 }
 
 .input input {
@@ -131,22 +135,37 @@ function gologin()
   margin-bottom: 3%; /* 输入框之间的间距 */
 }
 
-.email{
-    width: 10%;
-    padding: 10%;
-}
+
 .sendcode{
+    position: absolute;
+    top:75%;
+    left:50%;
     width:20%;
     height:10%;
     font-size: 5%;
+    background-color: #4ccaca;
 }
 .register_button{
+    position: absolute;
+    top:75%;
+    left:20%;
     width:15%;
     height:10%;
     font-size: 5%;
+    background-color: #4ccaca;
 
 }
+.isregister{
+    position: absolute;
+    top:90%;
+    left:7%;
+    width:20%;
+    height:10%;
+    font-size: 17px;
+    text-align: center;
+    color:#4ccaca;
 
+}
 
 .warning {
   width: 100%; /* 警告信息宽度自适应 */

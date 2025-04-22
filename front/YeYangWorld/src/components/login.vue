@@ -1,7 +1,7 @@
 <template>
 
   <div class="login">
-    <p class="login_title">登录</p>
+    <div class="login_title">登录</div>
     <input type="text" placeholder="邮箱" class="login_email" v-model = "email">
     <input type="password" placeholder="密码" class="login_password" v-model = "password">
     <button class="login_button" @click = "login">登录</button>
@@ -71,7 +71,7 @@
   height: 480px;
 
   /*居中设置*/
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 48%;
   transform: translate(-50%, -50%);
@@ -85,6 +85,9 @@
 }
 
 .login_title {    
+    position: absolute;
+    top: 5%;
+    left:40%;
     /* 字体设置 */
     font-size: 40px;
     font-weight: bold;
@@ -93,6 +96,11 @@
 }
 
 .login_email, .login_password{
+    /* 位置设置 */
+    position: relative;
+    top:25%;
+    left:7%;
+
     /* 长宽设置 */
     width: 300px;
     height: 40px;
@@ -114,12 +122,16 @@
 }
 
 .login_button {
+
+    /* 位置设置 */
+    position: absolute;
+    top: 62%;
+    left: 38%;
     /* 长宽设置 */
     width: 80px;
     height: 50px;
 
-    /* 间隔设置 */
-    margin : 8%;
+
 
     /* 颜色设置 */
     background-color: #26f0f0;  

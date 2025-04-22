@@ -37,8 +37,6 @@ const receiver = () => {
     width: 100%;
     height: 100%;
     position: absolute;
-    top: 0;
-    left: 0;
     background-image: url("/src/assets/userApp/background_img.jpeg");
 
     /* 背景图垂直、水平均居中 */
