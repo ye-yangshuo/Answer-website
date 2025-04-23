@@ -6,7 +6,9 @@ import LoginRegister from '/src/view/userApp/LoginRegister.vue'
 import Home from '/src/view/public/Home.vue'
 import QuestionType1 from '/src/view/datiApp/QuestionType1.vue'
 import ReadBegin from '/src/view/readApp/ReadBegin.vue'
-import ToolBegin from '/src/view/toolApp/ToolBegin.vue'
+import ToolBegin from '/src/view/toolApp/ToolBegin.vue';
+import Crawl from '/src/view/toolApp/Crawl.vue';
+
 
 const routes = [
     {
@@ -31,6 +33,10 @@ const routes = [
     {
         path : '/toolbegin',
         component : ToolBegin,
+    },
+    {
+        path : '/toolApp/crawl',
+        component : Crawl,
     }
 ]
 
