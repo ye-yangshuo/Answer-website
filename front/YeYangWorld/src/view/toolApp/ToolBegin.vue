@@ -7,9 +7,9 @@
             <p>网页爬虫</p>
             <p>可以爬取网页内容并转化为markdown格式</p>
         </router-link>
-        <router-link class="tool_crawl" to="/toolApp/crawl">
-            <p>网页爬虫</p>
-            <p>可以爬取网页内容并转化为markdown格式</p>
+        <router-link class="tool_crawl" to="/toolApp/markdown">
+            <p>markdown编辑器</p>
+            <p>实时预览markdown</p>
         </router-link>
         <router-link class="tool_crawl" to="/toolApp/crawl">
             <p>网页爬虫</p>

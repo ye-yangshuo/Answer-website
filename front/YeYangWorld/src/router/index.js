@@ -8,6 +8,7 @@ import QuestionType1 from '/src/view/datiApp/QuestionType1.vue'
 import ReadBegin from '/src/view/readApp/ReadBegin.vue'
 import ToolBegin from '/src/view/toolApp/ToolBegin.vue';
 import Crawl from '/src/view/toolApp/Crawl.vue';
+import Markdown from '/src/view/toolApp/Markdown.vue';
 
 
 const routes = [
@@ -37,6 +38,10 @@ const routes = [
     {
         path : '/toolApp/crawl',
         component : Crawl,
+    },
+    { 
+        path : '/toolApp/markdown',
+        component : Markdown,
     }
 ]
 
