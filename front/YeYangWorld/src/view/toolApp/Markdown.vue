@@ -13,7 +13,6 @@
 
 
 <script setup>
-import navigate from '/src/components/navigate.vue';
 
 import Vditor from 'vditor'
 import 'vditor/dist/index.css';

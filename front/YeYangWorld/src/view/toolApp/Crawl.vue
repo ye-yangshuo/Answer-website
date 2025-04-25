@@ -21,7 +21,6 @@
 </template>
 
 <script setup>
-import navigate from '/src/components/navigate.vue';
 import axios from 'axios';
 
 import { ref } from 'vue';

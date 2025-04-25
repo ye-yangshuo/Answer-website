@@ -4,12 +4,15 @@ import './style.css'
 
 import router from "./router/index";
 import axiosInstance from './utils/GlobalAxios';
+
 import ElementPlus from 'element-plus';
 import "element-plus/theme-chalk/index.css";
+
 import * as icons from '@element-plus/icons-vue';
 import SvgIcon from './components/SvgIcon.vue';
 import './assets/icon/iconfont.js';
 
+import navigate from '/src/components/navigate.vue';
 //创建app
 const app = createApp(App)
 
@@ -27,6 +30,8 @@ Object.keys(icons).forEach(key => {
 
 //全局挂载svg-icon
 app.component('SvgIcon', SvgIcon)
+
+app.component('navigate', navigate)
 
 //挂载app
 app.mount('#app')

@@ -4,9 +4,9 @@
     </a>
     <div class="nav-container">
       <router-link class='nav-item home' to="/home">首页</router-link> 
-      <router-link class='nav-item answer' to="/questiontype1">答题</router-link>
+      <router-link class='nav-item answer' to="/datibegin/questiontype1">答题</router-link>
       <router-link class='nav-item read' to="/readbegin">阅读</router-link>
-      <router-link class='nav-item plan' to="/blog">博客</router-link>
+      <router-link class='nav-item plan' to="/blogbegin">博客</router-link>
       <router-link class="nav-item tools" to="/toolbegin">工具</router-link>
     </div>
     <router-link class='my' to="/my"></router-link>
