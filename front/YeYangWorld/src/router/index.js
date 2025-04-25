@@ -6,7 +6,6 @@ import axiosInstance from '../utils/GlobalAxios';
 
 // 使用 import.meta.glob 动态导入所有模块化的路由文件
 const modules = import.meta.glob('../router/modules/*.js');
-console.log(modules)
 // 初始化路由数组
 let routes = [];
 

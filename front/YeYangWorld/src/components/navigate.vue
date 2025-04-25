@@ -26,6 +26,8 @@
     width: 100%;
     height: 60px;
     background-color: #ffffff;
+    z-index: 1000;
+    margin-bottom: 10px;
 
 }
 .logo{
