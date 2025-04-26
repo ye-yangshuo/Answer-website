@@ -27,7 +27,7 @@
     height: 60px;
     background-color: #ffffff;
     z-index: 1000;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
 }
 .logo{
