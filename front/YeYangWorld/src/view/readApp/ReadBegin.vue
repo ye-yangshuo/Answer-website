@@ -1,41 +1,76 @@
 <template>
-    <navigate></navigate>
+  <navigate></navigate>
 
-  <div class="readbegin">
-    <div class="left">a</div>
-    <div class="main">b</div>
-  </div>
+
+    <threelayout1>
+      <template v-slot:left>
+        <div class="left">
+          <el-menu class="left_menu" default-active="/readbegin/englisharticle" router="true" menu-trigger="click">
+            <el-sub-menu index="English">
+              <template #title>
+                <span>英语</span>
+              </template>
+              <el-menu-item index="/readbegin/englisharticle">英语文章</el-menu-item>
+              <el-menu-item index="/readbegin/englishbook">英语书籍</el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="Chinese">
+              <template #title>中文</template>
+              <el-menu-item index="/readbegin/chinesearticle">中文文章</el-menu-item>
+              <el-menu-item index="/readbegin/chinesebook">中文书籍</el-menu-item>
+            </el-sub-menu>
+          </el-menu>
+        </div>
+      </template>
+
+      <template v-slot:main>
+        <router-view></router-view>
+      </template>
+
+      <template v-slot:right>
+        <div class="right">
+          <el-button class="upload">上传书籍</el-button>
+          <el-menu class="right_menu" router="true" menu-trigger="click">
+            <el-menu-item index="/readbegin/history">历史记录</el-menu-item>
+            <el-menu-item index="/readbegin/collect">收藏</el-menu-item>
+          </el-menu>
+        </div>
+      </template>
+    </threelayout1>
+
 
 </template>
 
-<script setup>
 
+<script setup>
+import threelayout1 from '/src/components/threelayout1.vue'
 
 </script>
 
 <style scoped>
-.readbegin {
-    background-color: #E4E2E2;
-    width: 1200px;
-    height: 900px;
-    display: flex;
-    flex-direction: row;
-}
-.left{
-    position: sticky;
-    top:70px;
-    width:120px;
-    height: 500px;
-    background-color: #ffffff;
-}
-.main{
-    width:100%;
-    height: 900px;
-    background-color: #ffffff;
-    margin-left :  10px;
 
+
+
+
+
+/*左侧菜单栏*/
+.left_menu {
+  width: 100%;
+  height: 500px;
+  background-color: #ffffff;
 }
 
+/*右侧菜单栏*/
+.upload {
+  width: 100%;
+  height: 70px;
+  color: #000000;
+  font-weight: bold;
+  font-size: 20px;
 
+  margin-bottom: 30px;
+}
 
+.right_menu {
+  margin-bottom: 10%;
+}
 </style>
