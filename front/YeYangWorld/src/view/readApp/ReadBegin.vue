@@ -5,7 +5,7 @@
     <threelayout1>
       <template v-slot:left>
         <div class="left">
-          <el-menu class="left_menu" default-active="/readbegin/englisharticle" router="true" menu-trigger="click">
+          <el-menu class="left_menu" default-active="/readbegin/englisharticle" router>
             <el-sub-menu index="English">
               <template #title>
                 <span>英语</span>
@@ -29,7 +29,7 @@
       <template v-slot:right>
         <div class="right">
           <el-button class="upload">上传书籍</el-button>
-          <el-menu class="right_menu" router="true" menu-trigger="click">
+          <el-menu class="right_menu" router >
             <el-menu-item index="/readbegin/history">历史记录</el-menu-item>
             <el-menu-item index="/readbegin/collect">收藏</el-menu-item>
           </el-menu>
@@ -43,6 +43,10 @@
 
 <script setup>
 import threelayout1 from '/src/components/threelayout1.vue'
+
+
+
+
 
 </script>
 

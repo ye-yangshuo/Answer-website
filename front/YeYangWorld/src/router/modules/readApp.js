@@ -7,6 +7,7 @@ export default[
     {
         path: '/readbegin',
         name: 'readbegin',
+        redirect: '/readbegin/englisharticle',
         component: ReadBegin,
         children: [
             {
