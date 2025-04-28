@@ -28,7 +28,7 @@
 
       <template v-slot:right>
         <div class="right">
-          <el-button class="upload">上传书籍</el-button>
+          <router-link class="upload" to="/toolbegin/markdown">上传书籍</router-link>
           <el-menu class="right_menu" router >
             <el-menu-item index="/readbegin/history">历史记录</el-menu-item>
             <el-menu-item index="/readbegin/collect">收藏</el-menu-item>
@@ -65,11 +65,13 @@ import threelayout1 from '/src/components/threelayout1.vue'
 
 /*右侧菜单栏*/
 .upload {
+  display: block;
   width: 100%;
-  height: 70px;
+  height: 40px;
   color: #000000;
   font-weight: bold;
   font-size: 20px;
+  text-align: center;
 
   margin-bottom: 30px;
 }
