@@ -9,7 +9,7 @@ class DtwzUser(models.Model):
     email = models.CharField(max_length=32, blank=False, null=False, db_comment='用户邮箱')
     phone = models.CharField(max_length=32, blank=False, null=False, db_comment='用户手机号')
     #头像图片
-    avatar = models.ImageField(upload_to='avatar', blank=True, null=True, db_comment='用户头像')
+    avatar = models.ImageField(upload_to='userAPP/avatar', blank=True, null=True, db_comment='用户头像')
     
     
     class Meta:
