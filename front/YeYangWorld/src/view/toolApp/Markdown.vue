@@ -5,11 +5,14 @@
         <navigate></navigate>
         <div class="nav">
             <router-link class="return" to="/toolbegin">返回</router-link>
-            <div class="title">markdown编辑器</div>
+            <div class="name">markdown编辑器</div>
+            <el-button class="upload" @click="upload">上传</el-button>
         </div>
     </header>
-    <div id="vditor" ></div>
+    <input class="title" placeholder="请输入标题" v-model="title"></input>
+    <div id="vditor"></div>
   </template>
+
 
 
 <script setup>
@@ -17,18 +20,35 @@
 import Vditor from 'vditor'
 import 'vditor/dist/index.css';
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted ,inject} from 'vue';
+const axios = inject('axios')
 
 const vditor = ref()
 
 function creatVditor() {
     vditor.value = new Vditor('vditor',{
-    height: '1250px',
-    width: '900px',
+    width: '1225px',
+    height: '900px',
   })
 }
-
 onMounted(creatVditor)
+
+const title = ref('')
+const cover = ref('')
+const content = ref('')
+const category_id = ref(null)
+
+async function upload(){
+    content.value = vditor.value.getValue()
+    const response = await axios.post('/read/upload_article/',{
+        title: title.value,
+        cover: cover.value,
+        category_id: category_id.value,
+        content: content.value,
+    })
+    console.log(response.data)
+
+}
 
 </script>
 
@@ -44,13 +64,20 @@ onMounted(creatVditor)
     width: 100%;
     display: flex;
     flex-direction: row;
-    background-color: #f7efef;
-
+    background-color: #f7efef; 
+    justify-content: space-between;
     font-size: 25px;
     color: #f12222;
+
+}
+.title{
+    width: 1225px;
+    height: 50px;
+    font-size: 30px;
+    color: #000000;
+    font-weight: bold;
+
 }
 
-.nav .return {
-    margin-right: 40%;
-}
+
 </style>
