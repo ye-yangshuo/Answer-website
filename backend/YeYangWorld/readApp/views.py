@@ -5,6 +5,7 @@ from django.core.serializers import serialize
 import json
 
 from readApp.models import EnglishArticle
+from userApp.models import DtwzUser
 from myutils import JWT
 jwt = JWT()
 
@@ -16,14 +17,18 @@ def upload_article(request):
         userid = jwt.verify_token(token)
 
         data = json.loads(request.body)
-        print(data)
         title = data['title']
         cover = data['cover']
-        content = data['content']
+        chinese = data['chinese']
+        english = data['english']
         category_id = data['category_id']
+        #通过userid查询用户信息
+        user = DtwzUser.objects.get(id=userid)
+        user_name = user.name
+
         
         # 插入数据到EnglishArticle表中
-        EnglishArticle.objects.create(title=title, cover=cover, content=content, creator=userid, category=category_id)
+        EnglishArticle.objects.create(title=title, cover=cover, chinese=chinese,english=english, creator=user_name, category=category_id)
 
         return JsonResponse({'status': 200, 'message': '上传成功'})
     else:
