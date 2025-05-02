@@ -34,4 +34,26 @@ def upload_article(request):
     else:
         return JsonResponse({'status': 400, 'message': '请求方法错误'})
 
+@csrf_exempt
+def get_articl_list(request):
+    if request.method == 'POST':
+        token = request.META.get('HTTP_AUTHORIZATION')
+        token = token.split(' ')[1]
+        userid = jwt.verify_token(token)
+
+        data = json.loads(request.body)
+        count = data['count']
+   
+        #按照最新的时间排序，然后取出count到count+10的不含内容与创建事件字段的数据
+        article_list = EnglishArticle.objects.all().order_by('-create_time')[count+1:count+10].values('id', 'title', 'cover', 'creator', 'category', 'watch_count', 'star_count')
+        article_list = list(article_list)
+        count = count + len(article_list)
+
+        return JsonResponse({'status': 200, 'count':count ,'article_list': article_list})
+    else:
+        return JsonResponse({'status': 400, 'message': '请求方法错误'})
+
+
+
+
 
