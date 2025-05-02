@@ -1,6 +1,17 @@
 <template>
+    <div class="header">
+    </div>
     <div v-for="item in items" :key="item.id" class="item">
-        {{ item.text }}
+        <div class="item_content">
+            <div class="english_title"></div>
+            <div class="chinese_title"></div>
+            <div class="item_footer">
+                <div class="item_author"></div>
+                <div class="item_watch"></div>
+                <div class="item_star"></div>
+            </div>
+        </div>
+        <div class="item_image"></div>
     </div>
     <div v-if="isLoading" class="loading">Loading...</div>
 
@@ -8,31 +19,32 @@
 
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, inject,onMounted, onUnmounted } from 'vue';
+const axios = inject('axios');
 
 const items = ref([]);
 const isLoading = ref(false);
-const mainContainer = ref(null);
+const count = ref(-1);
 
 // 模拟加载更多数据的函数
-const loadMoreItems = () => {
+async function loading() {
+    if (isLoading.value) return; // 如果正在加载，则不执行
     isLoading.value = true;
-    // 模拟异步数据加载
-    setTimeout(() => {
-        const moreItems = Array.from({ length: 20 }, (_, index) => ({
-            id: items.value.length + index,
-            text: `Item ${items.value.length + index}`
-        }));
-        items.value.push(...moreItems);
+    try {
+        const response = await axios.post('/read/get_articl_list/', {count: count.value});
+        items.value.push(...response.data); // 将新数据添加到现有数据中
+    } catch (error) {
+        console.error('Error loading data:', error);
+    } finally {
         isLoading.value = false;
-    }, 1000);
-};
+    }
+}
 
 // 检查是否需要加载更多数据
 const checkScroll = () => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
     if (scrollTop + clientHeight >= scrollHeight - 10) { // 10 是一个阈值，可以根据需要调整
-        loadMoreItems();
+        loading();
     }
 };
 
@@ -45,12 +57,24 @@ onUnmounted(() => {
 });
 
 // 初始加载一些数据
-loadMoreItems();
+loading();
 </script>
 
+
 <style scoped>
-.item {
+.header {
+    height: 60px;
     background-color: #ffffff;
+    border-bottom: 1px solid #E4E6EB;
+
+
+}
+.item {
+    display: flex;
+    flex-direction: row;
+    height: 90px;
+    background-color: #ffffff;
+    border-bottom: #E4E6EB 2px solid;
     color: #000000;
 }
 </style>
