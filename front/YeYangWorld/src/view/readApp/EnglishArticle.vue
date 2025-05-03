@@ -3,15 +3,17 @@
     </div>
     <div v-for="item in items" :key="item.id" class="item">
         <div class="item_content">
-            <div class="english_title"></div>
-            <div class="chinese_title"></div>
+            <div class="english_title">{{ item.title.split('(')[1].split(')')[0] }} </div>
+            <div class="chinese_title"> {{ item.title.split('(')[0] }}</div>
             <div class="item_footer">
-                <div class="item_author"></div>
-                <div class="item_watch"></div>
-                <div class="item_star"></div>
+                <div class="item_creator">{{ item.creator }}</div>
+                <div class="item_watch">{{ item.watch_count }}</div>
+                <div class="item_star">{{ item.star_count }}</div>
             </div>
         </div>
-        <div class="item_image"></div>
+        <div class="item_image">
+           
+        </div>
     </div>
     <div v-if="isLoading" class="loading">Loading...</div>
 
@@ -32,7 +34,13 @@ async function loading() {
     isLoading.value = true;
     try {
         const response = await axios.post('/read/get_articl_list/', {count: count.value});
-        items.value.push(...response.data); // 将新数据添加到现有数据中
+        const articlelist = response.data.article_list;
+        count.value = response.data.count;
+
+        console.log(articlelist);
+        console.log(count.value);
+        items.value.push(...articlelist); // 将新数据添加到现有数据中
+        console.log(items.value);
     } catch (error) {
         console.error('Error loading data:', error);
     } finally {
@@ -76,5 +84,37 @@ loading();
     background-color: #ffffff;
     border-bottom: #E4E6EB 2px solid;
     color: #000000;
+}
+.item_content {
+    width: 80%;
+    padding-left: 30px;
+}
+.english_title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.chinese_title {
+    font-size: 16px;
+    color: #000000;
+}
+.item_footer{
+    width:40%;
+    display: flex;
+    flex-direction: row;
+    margin-top:10px;
+}
+.item_footer > div {
+    margin-right: 50px;
+    font-size: 14px;
+    color: #000000;
+}
+
+.item_image {
+    width: 14%;
+    height: 87%;
+    background-color: #E4E6EB;
+    margin-top: 5px;
+    margin-right: 25px;
 }
 </style>
