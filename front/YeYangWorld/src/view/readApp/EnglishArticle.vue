@@ -1,7 +1,7 @@
 <template>
     <div class="header">
     </div>
-    <div v-for="item in items" :key="item.id" class="item">
+    <div v-for="item in items" :key="item.id" class="item" @click = 'englishread(item)'>
         <div class="item_content">
             <div class="english_title">{{ item.title.split('(')[1].split(')')[0] }} </div>
             <div class="chinese_title"> {{ item.title.split('(')[0] }}</div>
@@ -36,7 +36,6 @@ async function loading() {
         const response = await axios.post('/read/get_articl_list/', {count: count.value});
         const articlelist = response.data.article_list;
         count.value = response.data.count;
-
         console.log(articlelist);
         console.log(count.value);
         items.value.push(...articlelist); // 将新数据添加到现有数据中
@@ -47,7 +46,6 @@ async function loading() {
         isLoading.value = false;
     }
 }
-
 // 检查是否需要加载更多数据
 const checkScroll = () => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
@@ -55,7 +53,6 @@ const checkScroll = () => {
         loading();
     }
 };
-
 // 添加和移除滚动事件监听器
 onMounted(() => {
     window.addEventListener('scroll', checkScroll);
@@ -63,9 +60,18 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('scroll', checkScroll);
 });
-
 // 初始加载一些数据
 loading();
+
+
+//知识点：动态路由参数传递
+import { useRouter } from 'vue-router';
+const router = useRouter();
+function englishread(item) {
+    console.log(item.id);
+    router.push({  name: 'englishread' , params:{articleid : item.id} }); // 传递参数到下一个页面
+}   
+
 </script>
 
 
