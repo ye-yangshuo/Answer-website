@@ -20,7 +20,7 @@ from django.contrib import admin
 
 from userApp.views import login_verify , send_code , register_verify, user_verify
 from datiApp.views import get_problem,submit_problem
-from readApp.views import upload_article,get_articl_list
+from readApp.views import upload_article,get_articl_list,get_article_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,4 +38,5 @@ urlpatterns = [
     #readApp
     path('read/upload_article/',upload_article, name='upload_article'),
     path('read/get_articl_list/',get_articl_list, name='get_articl_list'),
+    path('read/get_article_detail/',get_article_detail, name='get_article_detail'),
 ]

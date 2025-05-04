@@ -37,10 +37,6 @@ def upload_article(request):
 @csrf_exempt
 def get_articl_list(request):
     if request.method == 'POST':
-        token = request.META.get('HTTP_AUTHORIZATION')
-        token = token.split(' ')[1]
-        userid = jwt.verify_token(token)
-
         data = json.loads(request.body)
         count = data['count']
    
@@ -54,6 +50,20 @@ def get_articl_list(request):
         return JsonResponse({'status': 400, 'message': '请求方法错误'})
 
 
+@csrf_exempt
+def get_article_detail(request):
+    if request.method == 'POST':
 
+        data = json.loads(request.body)
+        article_id = data['article_id']
+
+        #根据id查询数据
+        article = EnglishArticle.objects.get(id=article_id)
+        article = serialize('json', [article], fields=('id', 'title', 'cover', 'chinese', 'english', 'category'))
+        article = json.loads(article)[0]['fields']
+
+        return JsonResponse({'status': 200, 'article': article})
+    else:
+        return JsonResponse({'status': 400, 'message': '请求方法错误'})
 
 
