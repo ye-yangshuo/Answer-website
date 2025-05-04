@@ -3,6 +3,9 @@ import EnglishArticle from '/src/view/readApp/EnglishArticle.vue'
 import EnglishBook from '/src/view/readApp/EnglishBook.vue'
 import ChineseArticle from '/src/view/readApp/ChineseArticle.vue'
 import ChineseBook from '/src/view/readApp/ChineseBook.vue'
+import EnglishRead from '/src/view/readApp/EnglishRead.vue'
+
+
 export default[
     {
         path: '/readbegin',
@@ -30,8 +33,13 @@ export default[
                 name: 'chinesebook',
                 component: ChineseBook
             }
-        ]
+        ],
+    },
 
+    {
+        path:'/readbegin/englishread/:articleid',
+        name:'englishread',
+        component:EnglishRead,
     },
 
 
