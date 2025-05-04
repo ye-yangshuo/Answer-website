@@ -42,7 +42,8 @@ const chinese = ref('')
 const english = ref('')
 
 async function upload(){
-    content.value = vditor.value.getValue()
+    content.value = vditor.value.getHTML()
+    console.log(content.value)
     const [chinesetext,englishtext] = separate(content.value)
     chinese.value = chinesetext
     english.value = englishtext
