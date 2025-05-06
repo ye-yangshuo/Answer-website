@@ -19,8 +19,7 @@ def upload_article(request):
         data = json.loads(request.body)
         title = data['title']
         cover = data['cover']
-        chinese = data['chinese']
-        english = data['english']
+        content = data['content']
         category_id = data['category_id']
         #通过userid查询用户信息
         user = DtwzUser.objects.get(id=userid)
@@ -28,7 +27,7 @@ def upload_article(request):
 
         
         # 插入数据到EnglishArticle表中
-        EnglishArticle.objects.create(title=title, cover=cover, chinese=chinese,english=english, creator=user_name, category=category_id)
+        EnglishArticle.objects.create(title=title, cover=cover, content=content, creator=user_name, category=category_id)
 
         return JsonResponse({'status': 200, 'message': '上传成功'})
     else:
@@ -59,7 +58,7 @@ def get_article_detail(request):
 
         #根据id查询数据
         article = EnglishArticle.objects.get(id=article_id)
-        article = serialize('json', [article], fields=('id', 'title', 'cover', 'chinese', 'english', 'category'))
+        article = serialize('json', [article], fields=('id', 'title', 'cover', 'content', 'category'))
         article = json.loads(article)[0]['fields']
 
         return JsonResponse({'status': 200, 'article': article})
