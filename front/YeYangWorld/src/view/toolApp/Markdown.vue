@@ -16,7 +16,7 @@
 
 
 <script setup>
-import separate from '/src/utils/Separate.js'
+
 
 import Vditor from 'vditor'
 import 'vditor/dist/index.css';
@@ -38,22 +38,19 @@ const title = ref('')
 const cover = ref('')
 const content = ref('')
 const category_id = ref(null)
-const chinese = ref('')
-const english = ref('')
+
 
 async function upload(){
     content.value = vditor.value.getHTML()
     console.log(content.value)
-    const [chinesetext,englishtext] = separate(content.value)
-    chinese.value = chinesetext
-    english.value = englishtext
+
     
     const response = await axios.post('/read/upload_article/',{
         title: title.value,
         cover: cover.value,
         category_id: category_id.value,
-        chinese: chinese.value,
-        english: english.value,
+        content: content.value,
+
     })
     console.log(response.data)
 
