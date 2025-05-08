@@ -9,6 +9,7 @@ from userApp.models import DtwzUser
 from myutils import JWT
 jwt = JWT()
 
+
 @csrf_exempt
 def upload_article(request):
     if request.method == 'POST':
@@ -16,18 +17,26 @@ def upload_article(request):
         token = token.split(' ')[1]
         userid = jwt.verify_token(token)
 
-        data = json.loads(request.body)
-        title = data['title']
-        cover = data['cover']
-        content = data['content']
-        category_id = data['category_id']
+        title = request.POST.get('title')
+        cover = request.FILES.get('cover')
+        content = request.POST.get('content')
+        category_id = request.POST.get('category_id')
+        #将字符串转化为数字，如果是空字符串则转化为0
+        if category_id == '':
+            category_id = None
+        else:
+            category_id = int(category_id)
+
+    
+        print(category_id)
+
+
         #通过userid查询用户信息
         user = DtwzUser.objects.get(id=userid)
         user_name = user.name
 
-        
         # 插入数据到EnglishArticle表中
-        EnglishArticle.objects.create(title=title, cover=cover, content=content, creator=user_name, category=category_id)
+        EnglishArticle.objects.create(title=title, cover=cover, content=content, creator=user_name, category_id=category_id)
 
         return JsonResponse({'status': 200, 'message': '上传成功'})
     else:
