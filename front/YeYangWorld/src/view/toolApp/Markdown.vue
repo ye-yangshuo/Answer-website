@@ -28,14 +28,16 @@
         <el-form :model="form" label-width="120px">
             <el-form-item label="文章分类"></el-form-item>
             <el-form-item label="文章封面">
-                <el-upload 
-                    action="your-upload-url" 
-                    list-type="picture-card" 
-                    :auto-upload="false" 
-                    :show-file-list="false"
-                    :limit="1">
-                    <el-icon><Plus /></el-icon>
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <el-upload action="your-upload-url" list-type="picture-card" :auto-upload="false"
+                    :show-file-list="false" :limit="1" :on-change="handleChange" :handleRemove="handleremove"
+                    :file-list="fileList">
+                    <el-icon v-if="!imageUrl">
+                        <Plus />
+                    </el-icon>
+                    <img class="img" v-if="imageUrl" :src="imageUrl" />
+                    <el-icon class='delete' v-if="imageUrl" @click="deleteimg">
+                        <DeleteFilled />
+                    </el-icon>
                 </el-upload>
             </el-form-item>
         </el-form>
@@ -66,23 +68,40 @@ function creatVditor() {
 onMounted(creatVditor)
 
 
-//上传文章
+//显示图片
+const imageUrl = ref('')
+function handleChange(uploadFile) {
+    imageUrl.value = URL.createObjectURL(uploadFile.raw);
+    fileList.value.push(uploadFile.raw)
+    console.log(fileList.value)
+}
+//删除图片
+const fileList = ref([])
+function deleteimg() {
+    imageUrl.value = ''
+    console.log(fileList.value)
+    fileList.value = []
+}
+
+
 const upload = ref(false)
 const title = ref('')
-const cover = ref('')
 const content = ref('')
-const category_id = ref(null)
+const category_id = ref('')
 async function certainupload() {
     content.value = vditor.value.getHTML()
     console.log(content.value)
-    const response = await axios.post('/read/upload_article/', {
-        title: title.value,
-        cover: cover.value,
-        category_id: category_id.value,
-        content: content.value,
-    })
+    // 创建一个新的FormData对象
+    const formData = new FormData();
+    // 向FormData对象中添加字段
+    formData.append('title', title.value);
+    formData.append('cover', fileList.value[0]); 
+    formData.append('category_id', category_id.value);
+    formData.append('content', content.value);
+    const response = await axios.post('/read/upload_article/', formData)
     console.log(response.data)
 }
+
 
 </script>
 
@@ -114,5 +133,16 @@ async function certainupload() {
 
 }
 
+.img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
 
+.delete {
+    position: absolute;
+    top: 0;
+    left: 150px;
+
+}
 </style>
