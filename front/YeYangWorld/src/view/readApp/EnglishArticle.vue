@@ -11,9 +11,7 @@
                 <div class="item_star">{{ item.star_count }}</div>
             </div>
         </div>
-        <div class="item_image">
-           
-        </div>
+        <img class="item_image" :src="baselUrl+item.cover" v-if="item.cover"/>
     </div>
     <div v-if="isLoading" class="loading">Loading...</div>
 
@@ -27,6 +25,7 @@ const axios = inject('axios');
 const items = ref([]);
 const isLoading = ref(false);
 const count = ref(-1);
+const baselUrl = 'http://localhost:8000/media/';
 
 // 模拟加载更多数据的函数
 async function loading() {
@@ -117,10 +116,12 @@ function englishread(item) {
 }
 
 .item_image {
-    width: 14%;
-    height: 87%;
+    width: 100px;
+    height: 80px;
     background-color: #E4E6EB;
     margin-top: 5px;
+    margin-bottom: 5px;
     margin-right: 25px;
+    border-radius: 4px;
 }
 </style>
