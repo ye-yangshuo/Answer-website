@@ -28,9 +28,8 @@
         <el-form :model="form" label-width="120px">
             <el-form-item label="文章分类"></el-form-item>
             <el-form-item label="文章封面">
-                <el-upload action="your-upload-url" list-type="picture-card" :auto-upload="false"
-                    :show-file-list="false" :limit="1" :on-change="handleChange" :handleRemove="handleremove"
-                    :file-list="fileList">
+                <el-upload list-type="picture-card" :auto-upload="false"
+                    :show-file-list="false" :limit="1" :on-change="handleChange" :file-list="fileList">
                     <el-icon v-if="!imageUrl">
                         <Plus />
                     </el-icon>
@@ -83,23 +82,24 @@ function deleteimg() {
     fileList.value = []
 }
 
-
+//显示悬浮窗
 const upload = ref(false)
+
+//上传文章
 const title = ref('')
 const content = ref('')
 const category_id = ref('')
 async function certainupload() {
     content.value = vditor.value.getHTML()
-    console.log(content.value)
-    // 创建一个新的FormData对象
-    const formData = new FormData();
-    // 向FormData对象中添加字段
+    // console.log(content.value)
+    const formData = new FormData();  //适用于多数据类型混合传输的情况
     formData.append('title', title.value);
-    formData.append('cover', fileList.value[0]); 
+    formData.append('cover', fileList.value[0]);
     formData.append('category_id', category_id.value);
     formData.append('content', content.value);
-    const response = await axios.post('/read/upload_article/', formData)
-    console.log(response.data)
+    const response = await axios.post('/read/upload_article/', formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } })
+    // console.log(response.data)
 }
 
 
