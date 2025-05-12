@@ -8,6 +8,7 @@
       <router-link class='nav-item read' to="/readbegin">阅读</router-link>
       <router-link class='nav-item plan' to="/blogbegin">博客</router-link>
       <router-link class="nav-item tools" to="/toolbegin">工具</router-link>
+      <router-link class="nav-item plan" to="/planbegin">计划</router-link>
     </div>
     <router-link class='my' to="/my"></router-link>
     </div>
