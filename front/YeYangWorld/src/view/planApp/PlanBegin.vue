@@ -2,38 +2,148 @@
     <navigate class="navigate"></navigate>
     <div class="planbegin">
         <div class="left">
-            <Calendar  class='calendar' expanded transparent borderless  title-position="left" />
+            <Calendar class='calendar' expanded transparent borderless title-position="left" ref="calendar">
+            <template #footer>
+                <div class="w-full px-4 pb-3">
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold w-full px-3 py-1 rounded-md"
+                        @click="moveToday">
+                        Today
+                    </button>
+                </div>
+            </template>
+            </Calendar>
         </div>
+
+
         <div class="right">
 
+            <div class="right_top">
+                <div class="now_days">连续完成天数</div>
+                <div class="history_days">历史连续完成天数</div>
+            </div>
+
+
+            <div class="right_create">
+                <div class="now_time">当前时间</div>
+                <input type="text" class="input" placeholder="请输入计划">
+                <button class="button">创建计划</button>
+            </div>
+
+
+            <div class="right_complete">
+
+                <div class="incompleted">
+                    <div class='title'>正在完成</div>
+                    <div class="content"></div>
+                </div>
+
+                <div class="completed">
+                    <div class='title'>已完成</div>
+                    <div class="content"></div>
+                </div>
+
+            </div>
+
+
         </div>
-        </div>
+    </div>
 </template>
 
 <script setup>
 import { Calendar } from 'v-calendar';
 import 'v-calendar/style.css';
+import { ref } from 'vue';
+
+const calendar = ref(null);
+
+function moveToday() {
+  calendar.value.move(new Date());
+}
 
 </script>
 
+
+
 <style scoped>
-.navigate{
+.navigate {
     margin-bottom: 0;
 }
-.planbegin{
-width:1200px;
-height:900px;
-background-color: #ffffff;
-display:flex;
-flex-direction: row;
+
+/*主页面 */
+.planbegin {
+    width: 1200px;
+    height: 700px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
 }
-.left{
-    width:35%;
-    height:100%;
+
+
+
+/*左侧*/
+.left {
+    width: 35%;
+    height: 100%;
     border-right: #383636 solid 1px;
 }
-.calendar{
+
+
+
+/*右侧*/
+.right {
+    width: 65%;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+/*顶部 */
+.right_top {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: #4a4949 solid 1px;
+    align-items: center;
+    color: #383636;
+    font-size: 20px;
+}
+
+.now_days {
+    width: 50%;
+    margin-left: 20px;
+}
+
+/*创建*/
+.right_create {
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: #383636;
+    margin-top: 15px;
+    align-items: center;
 
 }
 
+/*完成与未完成 */
+.right_complete {
+    margin-top: 15px;
+    height: 570px;
+    display: flex;
+    flex-direction: row;
+    color: #383636;
+    border-top: #383636 solid 1px;
+}
+
+.incompleted {
+    width: 50%;
+    border-right: #383636 solid 1px;
+}
+
+.completed {
+    width: 50%;
+}
+
+.title {
+    border-bottom: #383636 solid 1px;
+}
 </style>
