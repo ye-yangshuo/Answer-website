@@ -27,8 +27,8 @@
 
             <div class="right_create">
                 <div class="now_time">{{ selectedTime }}</div>
-                <input type="text" class="input" placeholder="请输入计划">
-                <button class="button">创建计划</button>
+                <input type="text" placeholder="请输入计划" v-model="planContent"></input>
+                <button class="button" @click="createplan">创建计划</button>
             </div>
 
 
@@ -36,17 +36,29 @@
 
                 <div class="incompleted">
                     <div class='title'>正在完成</div>
-                    <div class="content"></div>
+
+                    <div class="plan" v-for="(incom, incom_index) in incompleted[selectedTime]" :key="incom.id">
+                        <div class="content">{{ incom.content }}</div>
+                        <button class="delete" @click="deleteplan(incom_index)">删除</button>
+                        <button class="complete" @click="completeplan(incom, incom_index)">完成</button>
+                    </div>
+
                 </div>
+
 
                 <div class="completed">
                     <div class='title'>已完成</div>
-                    <div class="content"></div>
+
+                    <div class="plan" v-for="(com, com_index) in completed[selectedTime]" :key="com.id">
+                        <div class="content">{{ com.content }}</div>
+                        <button class="back" @click="backplan(com, com_index)">回退</button>
+                    </div>
+
                 </div>
 
+
+
             </div>
-
-
         </div>
     </div>
 </template>
@@ -56,10 +68,11 @@
 import { Calendar } from 'v-calendar';
 import 'v-calendar/style.css';
 import { ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
 
+const calendar = ref(null);
 const nowDate = ref(new Date());
 const selectedDate = ref(new Date());
-const calendar = ref(null);
 const selectedTime = ref(getTodayDate());
 const attributes = ref([
     { key: 'today', highlight: { fillMode: 'solid' }, dates: nowDate.value },
@@ -87,6 +100,39 @@ function handleselect(value) {
     selectedTime.value = value.id
 }
 
+const planContent = ref('')
+const incompleted = ref({})
+const completed = ref({})
+const id = ref(0)
+function createplan() {
+    if (incompleted.value[selectedTime.value] == undefined) {
+        incompleted.value[selectedTime.value] = []
+    }
+    id.value = uuidv4()
+    incompleted.value[selectedTime.value].push({ id: id.value, content: planContent.value })
+    planContent.value = ''
+    // console.log(incompleted.value)
+}
+function deleteplan(incom_index) {
+    incompleted.value[selectedTime.value].splice(incom_index, 1)
+    //console.log(incompleted.value)
+}
+function completeplan(incom, incom_index) {
+    if (completed.value[selectedTime.value] == undefined) {
+        completed.value[selectedTime.value] = []
+    }
+    completed.value[selectedTime.value].push(incom)
+    incompleted.value[selectedTime.value].splice(incom_index, 1)
+    // console.log(incom, icom_index,incompleted.value[selectedTime.value],completed.value[selectedTime.value])
+}
+function backplan(com, com_index) {
+    if (incompleted.value[selectedTime.value] == undefined) {
+        incompleted.value[selectedTime.value] = []
+    }
+    incompleted.value[selectedTime.value].push(com)
+    completed.value[selectedTime.value].splice(com_index, 1)
+    // console.log(com, com_index,incompleted.value[selectedTime.value],completed.value[selectedTime.value])
+}
 </script>
 
 
@@ -171,6 +217,13 @@ function handleselect(value) {
 }
 
 .title {
+    border-bottom: #383636 solid 1px;
+}
+
+.plan {
+    display: flex;
+    flex-direction: row;
+    height: 40px;
     border-bottom: #383636 solid 1px;
 }
 </style>
