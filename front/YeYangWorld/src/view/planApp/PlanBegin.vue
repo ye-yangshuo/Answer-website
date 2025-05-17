@@ -14,21 +14,25 @@
                     </div>
                 </template>
             </Calendar>
+
+            <div class="left_bottom">
+                <div class="conpleted_days">已完成天数</div>
+                <div class="now_days">连续完成天数</div>
+                <div class="history_days">历史连续完成天数</div>
+            </div>
+
         </div>
 
 
         <div class="right">
 
-            <div class="right_top">
-                <div class="now_days">连续完成天数</div>
-                <div class="history_days">历史连续完成天数</div>
-            </div>
+            <div class="now_time">{{ selectedTime }}</div>
 
 
             <div class="right_create">
-                <div class="now_time">{{ selectedTime }}</div>
-                <input type="text" placeholder="请输入计划" v-model="planContent"></input>
-                <button class="button" @click="createplan">创建计划</button>
+                <input class="input" type="text" placeholder="请输入计划" v-model="planContent"></input>
+                <button class="create" @click="createplan">创建计划</button>
+                <button class="commit" @click="commit">提交</button>
             </div>
 
 
@@ -65,9 +69,11 @@
 
 
 <script setup>
+import { ref, inject } from 'vue';
+const axios = inject('axios');
+
 import { Calendar } from 'v-calendar';
 import 'v-calendar/style.css';
-import { ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
 const calendar = ref(null);
@@ -133,6 +139,22 @@ function backplan(com, com_index) {
     completed.value[selectedTime.value].splice(com_index, 1)
     // console.log(com, com_index,incompleted.value[selectedTime.value],completed.value[selectedTime.value])
 }
+
+let completed_content = []
+async function commit() {
+
+    for (const com of completed.value[selectedTime.value]) {
+        completed_content.push(com.content)
+    }
+    //将数组转换为字符串且换行
+    const contentString = completed_content.join('\n');
+    // console.log(contentString)
+
+    const response = await axios.post('/plan/commit_plan/', {
+        plan_content: contentString
+    })
+    console.log(response)
+}
 </script>
 
 
@@ -160,6 +182,16 @@ function backplan(com, com_index) {
     border-right: #383636 solid 1px;
 }
 
+.left_bottom {
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-top: #4a4949 solid 1px;
+    color: #383636;
+    font-size: 20px;
+}
 
 
 /*右侧*/
@@ -169,20 +201,14 @@ function backplan(com, com_index) {
     background-color: #ffffff;
 }
 
-/*顶部 */
-.right_top {
-    height: 40px;
+.now_time {
+    border-bottom: #383636 solid 1px;
+    height: 45px;
+    color: #000000;
     display: flex;
-    flex-direction: row;
-    border-bottom: #4a4949 solid 1px;
     align-items: center;
-    color: #383636;
+    justify-content: center;
     font-size: 20px;
-}
-
-.now_days {
-    width: 50%;
-    margin-left: 20px;
 }
 
 /*创建*/
@@ -223,7 +249,7 @@ function backplan(com, com_index) {
 .plan {
     display: flex;
     flex-direction: row;
-    height: 40px;
+    min-height: 40px;
     border-bottom: #383636 solid 1px;
 }
 </style>
