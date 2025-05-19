@@ -7,7 +7,7 @@
                 <template #footer>
                     <div class="w-full px-4 pb-3">
                         <button
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold w-full px-3 py-1 rounded-md"
+                            class="bg-indigo-600 hover:bg-indigo-700 `text-white font-bold w-full px-3 py-1 rounded-md"
                             @click="moveToday">
                             Today
                         </button>
@@ -38,8 +38,8 @@
 
             <div class="right_complete">
 
-                <div class="incompleted">
-                    <div class='title'>正在完成</div>
+                <div class="incompleted" v-if="showIncompleted">
+                    <div class='title' >正在完成</div>
 
                     <div class="plan" v-for="(incom, incom_index) in incompleted[selectedTime]" :key="incom.id">
                         <div class="content">{{ incom.content }}</div>
@@ -50,8 +50,8 @@
                 </div>
 
 
-                <div class="completed">
-                    <div class='title'>已完成</div>
+                <div class="completed" v-if="showCompleted">
+                    <div class='title' >已完成</div>
 
                     <div class="plan" v-for="(com, com_index) in completed[selectedTime]" :key="com.id">
                         <div class="content">{{ com.content }}</div>
@@ -69,7 +69,7 @@
 
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, watch } from 'vue';
 const axios = inject('axios');
 
 import { Calendar } from 'v-calendar';
@@ -155,6 +155,28 @@ async function commit() {
     })
     console.log(response)
 }
+
+const showIncompleted = ref(true)
+const showCompleted = ref(true)
+
+watch(selectedTime,function(newVal, oldVal){
+    if (newVal< getTodayDate()) {
+        showCompleted.value = true
+        showIncompleted.value = false
+
+    }
+    else if (newVal == getTodayDate())  {
+        showCompleted.value = true
+        showIncompleted.value = true
+    }
+    else {
+        showCompleted.value = false
+        showIncompleted.value = true
+    }
+
+}
+)
+
 </script>
 
 
@@ -228,18 +250,20 @@ async function commit() {
     margin-top: 15px;
     height: 570px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     color: #383636;
-    border-top: #383636 solid 1px;
 }
 
 .incompleted {
-    width: 50%;
-    border-right: #383636 solid 1px;
+    min-height: 50%;
+    border-top: #383636 solid 1px;
+    overflow-y: auto;
 }
 
 .completed {
-    width: 50%;
+    min-height: 50%;
+    border-top: #383636 solid 1px;
+    overflow-y: auto;
 }
 
 .title {
