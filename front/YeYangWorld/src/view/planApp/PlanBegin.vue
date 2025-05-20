@@ -39,7 +39,7 @@
             <div class="right_complete">
 
                 <div class="incompleted" v-if="showIncompleted">
-                    <div class='title' >正在完成</div>
+                    <div class='title'>正在完成</div>
 
                     <div class="plan" v-for="(incom, incom_index) in incompleted[selectedTime]" :key="incom.id">
                         <div class="content">{{ incom.content }}</div>
@@ -51,7 +51,7 @@
 
 
                 <div class="completed" v-if="showCompleted">
-                    <div class='title' >已完成</div>
+                    <div class='title'>已完成</div>
 
                     <div class="plan" v-for="(com, com_index) in completed[selectedTime]" :key="com.id">
                         <div class="content">{{ com.content }}</div>
@@ -69,12 +69,13 @@
 
 
 <script setup>
-import { ref, inject, watch } from 'vue';
+import { ref, inject, watch, onMounted, onBeforeUnmount } from 'vue';
 const axios = inject('axios');
 
 import { Calendar } from 'v-calendar';
 import 'v-calendar/style.css';
 import { v4 as uuidv4 } from 'uuid';
+import { ElMessage } from 'element-plus';
 
 const calendar = ref(null);
 const nowDate = ref(new Date());
@@ -111,6 +112,20 @@ const incompleted = ref({})
 const completed = ref({})
 const id = ref(0)
 function createplan() {
+    if (planContent.value == '') {
+        ElMessage({
+            message: '请输入计划内容',
+            type: 'warning',
+        })
+        return
+    }
+    if (selectedTime.value < getTodayDate()) {
+        ElMessage({
+            message: '不能添加过去日期的计划',
+            type: 'warning',
+        })
+        return
+    }
     if (incompleted.value[selectedTime.value] == undefined) {
         incompleted.value[selectedTime.value] = []
     }
@@ -139,10 +154,29 @@ function backplan(com, com_index) {
     completed.value[selectedTime.value].splice(com_index, 1)
     // console.log(com, com_index,incompleted.value[selectedTime.value],completed.value[selectedTime.value])
 }
+function saveToLocal() {
+
+    localStorage.setItem('incompleted', JSON.stringify(incompleted.value));
+    localStorage.setItem('completed', JSON.stringify(completed.value));
+    console.log(incompleted.value, completed.value)
+
+}
+function loadFromLocal() {
+    incompleted.value = JSON.parse(localStorage.getItem('incompleted'))
+    completed.value = JSON.parse(localStorage.getItem('completed')) 
+}
+onMounted(loadFromLocal)
+watch(incompleted ,function (newVal) {
+    localStorage.setItem('incompleted', JSON.stringify(newVal));
+
+} , {deep:true} )
+watch(completed, function (newVal) {
+    localStorage.setItem('completed', JSON.stringify(newVal));
+},{deep:true});
+
 
 let completed_content = []
 async function commit() {
-
     for (const com of completed.value[selectedTime.value]) {
         completed_content.push(com.content)
     }
@@ -159,18 +193,14 @@ async function commit() {
 const showIncompleted = ref(true)
 const showCompleted = ref(true)
 
-watch(selectedTime,function(newVal, oldVal){
-    if (newVal< getTodayDate()) {
+watch(selectedTime, function (newVal, oldVal) {
+    if (newVal < getTodayDate()) {
         showCompleted.value = true
         showIncompleted.value = false
 
     }
-    else if (newVal == getTodayDate())  {
-        showCompleted.value = true
-        showIncompleted.value = true
-    }
     else {
-        showCompleted.value = false
+        showCompleted.value = true
         showIncompleted.value = true
     }
 
