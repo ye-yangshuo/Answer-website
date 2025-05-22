@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 from userApp.views import login_verify , send_code , register_verify, user_verify
 from datiApp.views import get_problem,submit_problem
 from readApp.views import upload_article,get_articl_list,get_article_detail
-from planApp.views import commit_plan
+from planApp.views import commit_plan,get_plan
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -45,5 +45,6 @@ urlpatterns = [
 
     #planApp
     path('plan/commit_plan/',commit_plan, name='commit_plan'),
+    path('plan/get_plan/',get_plan, name='get_plan'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #开发环境，在生产环境中需要配置nginx

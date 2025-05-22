@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core.serializers import serialize
 import json
+import datetime
 
 from userApp.models import DtwzUser
 from planApp.models import PlanCompleted
@@ -15,7 +16,7 @@ def commit_plan(request):
         token = request.META.get('HTTP_AUTHORIZATION')
         token = token.split(' ')[1]
         userid = jwt.verify_token(token)
-        print(userid)
+
         data = json.loads(request.body)
         plan_content = data['plan_content']
 
@@ -26,3 +27,17 @@ def commit_plan(request):
         return JsonResponse({'status': 400, 'message': '请求方式错误'})
 
 
+@csrf_exempt
+def get_plan(request):
+    if request.method == 'GET':
+        token = request.META.get('HTTP_AUTHORIZATION')
+        token = token.split(' ')[1]
+        userid = jwt.verify_token(token)
+
+        currentDate = datetime.date.today()
+        # 查询数据
+        plans = PlanCompleted.objects.filter(user_id=userid,create_time__year=currentDate.year, create_time__month=currentDate.month)
+        plans_data = [{'id': plan.id, 'content': plan.content, 'create_time': plan.create_time} for plan in plans]
+
+        print(plans_data)
+        return JsonResponse({'status': 200, 'data': plans_data})
