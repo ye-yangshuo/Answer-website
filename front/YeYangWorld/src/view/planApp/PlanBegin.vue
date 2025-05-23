@@ -2,7 +2,7 @@
     <navigate class="navigate"></navigate>
     <div class="planbegin">
         <div class="left">
-            <Calendar @dayclick='handleselect' ref="calendar" :attributes="attributes" expanded transparent borderless
+            <Calendar @dayclick='handleSelect' ref="calendar" :attributes="attributes" expanded transparent borderless
                 title-position="left">
                 <template #footer>
                     <div class="w-full px-4 pb-3">
@@ -31,8 +31,8 @@
 
             <div class="right_create">
                 <input class="input" type="text" placeholder="请输入计划" v-model="planContent"></input>
-                <button class="create" @click="createplan">创建计划</button>
-                <button class="commit" @click="commit">提交</button>
+                <button class="create" @click="createPlan">创建计划</button>
+                <button class="commit" @click="commitPlan">提交</button>
             </div>
 
 
@@ -43,8 +43,8 @@
 
                     <div class="plan" v-for="(incom, incom_index) in incompleted[selectedTime]" :key="incom.id">
                         <div class="content">{{ incom.content }}</div>
-                        <button class="delete" @click="deleteplan(incom_index)">删除</button>
-                        <button class="complete" @click="completeplan(incom, incom_index)">完成</button>
+                        <button class="delete" @click="deletePlan(incom_index)">删除</button>
+                        <button class="complete" @click="completePlan(incom, incom_index)">完成</button>
                     </div>
 
                 </div>
@@ -55,7 +55,7 @@
 
                     <div class="plan" v-for="(com, com_index) in completed[selectedTime]" :key="com.id">
                         <div class="content">{{ com.content }}</div>
-                        <button class="back" @click="backplan(com, com_index)">回退</button>
+                        <button class="back" @click="backPlan(com, com_index)" v-if="showIncompleted">回退</button>
                     </div>
 
                 </div>
@@ -69,7 +69,7 @@
 
 
 <script setup>
-import { ref, inject, watch, onMounted, onBeforeUnmount } from 'vue';
+import { ref, inject, watch, onMounted } from 'vue';
 const axios = inject('axios');
 
 import { Calendar } from 'v-calendar';
@@ -77,15 +77,37 @@ import 'v-calendar/style.css';
 import { v4 as uuidv4 } from 'uuid';
 import { ElMessage } from 'element-plus';
 
+//变量管理
+
+// 日历组件的引用
 const calendar = ref(null);
+// 今天日期，Date格式
 const nowDate = ref(new Date());
+// 选中日期，Date格式
 const selectedDate = ref(new Date());
+// 选中日期，string格式
 const selectedTime = ref(getTodayDate());
+// 日历属性配置，用于高亮显示今天的日期
 const attributes = ref([
     { key: 'today', highlight: { fillMode: 'solid' }, dates: nowDate.value },
-])
+]);
+// 计划内容，string格式
+const planContent = ref('');
+// 全部未完成计划，格式：{date: [{id: 1, content: '学习'}, {···}], ···}
+const incompleted = ref({});
+// 全部已完成计划，格式：{date: [{id: 1, content: '学习'}, {···}], ···}
+const completed = ref({});
+// 唯一id
+const id = ref(0);
+// 显示未完成和已完成计划的状态
+const showIncompleted = ref(true);
+const showCompleted = ref(true);
 
-//获取特定格式的现在日期
+
+
+//函数管理
+
+// 获取今天的日期，string格式
 function getTodayDate() {
     const today = new Date();
     const year = today.getFullYear();
@@ -93,119 +115,108 @@ function getTodayDate() {
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
-//移动到今天,并显示今天
+// 日历移动到今天日期，并显示今天日期
 function moveToday() {
     calendar.value.move(nowDate.value);
+    attributes.value = [{ key: 'today', highlight: { fillMode: 'solid' }, dates: nowDate.value }];
     selectedTime.value = getTodayDate();
-    attributes.value[1] = {};
 }
-//选择日期,并显示日期
-function handleselect(value) {
-    // console.log(value)
-    selectedDate.value = new Date(value.id)
-    attributes.value[1] = { key: 'selected', highlight: { fillMode: 'outline' }, dates: selectedDate.value }
-    selectedTime.value = value.id
+// 选择日历中的日期，并显示被选择的日期
+function handleSelect(value) {
+    selectedDate.value = new Date(value.id);
+    attributes.value = [{ key: 'selected', highlight: { fillMode: 'outline' }, dates: selectedDate.value }];
+    selectedTime.value = value.id;
 }
 
-const planContent = ref('')
-const incompleted = ref({})
-const completed = ref({})
-const id = ref(0)
-function createplan() {
-    if (planContent.value == '') {
+// 创建计划
+function createPlan() {
+    if (planContent.value === '') {
         ElMessage({
             message: '请输入计划内容',
             type: 'warning',
-        })
-        return
+        });
+        return;
     }
     if (selectedTime.value < getTodayDate()) {
         ElMessage({
             message: '不能添加过去日期的计划',
             type: 'warning',
-        })
-        return
+        });
+        return;
     }
-    if (incompleted.value[selectedTime.value] == undefined) {
-        incompleted.value[selectedTime.value] = []
+    if (!incompleted.value[selectedTime.value]) {
+        incompleted.value[selectedTime.value] = [];
     }
-    id.value = uuidv4()
-    incompleted.value[selectedTime.value].push({ id: id.value, content: planContent.value })
-    planContent.value = ''
-    // console.log(incompleted.value)
+    id.value = uuidv4();
+    incompleted.value[selectedTime.value].push({ id: id.value, content: planContent.value });
+    planContent.value = '';
 }
-function deleteplan(incom_index) {
-    incompleted.value[selectedTime.value].splice(incom_index, 1)
-    //console.log(incompleted.value)
+// 删除计划
+function deletePlan(incomIndex) {
+    incompleted.value[selectedTime.value].splice(incomIndex, 1);
 }
-function completeplan(incom, incom_index) {
-    if (completed.value[selectedTime.value] == undefined) {
-        completed.value[selectedTime.value] = []
+// 完成计划
+function completePlan(incom, incomIndex) {
+    if (!completed.value[selectedTime.value]) {
+        completed.value[selectedTime.value] = [];
     }
-    completed.value[selectedTime.value].push(incom)
-    incompleted.value[selectedTime.value].splice(incom_index, 1)
-    // console.log(incom, icom_index,incompleted.value[selectedTime.value],completed.value[selectedTime.value])
+    completed.value[selectedTime.value].push(incom);
+    incompleted.value[selectedTime.value].splice(incomIndex, 1);
 }
-function backplan(com, com_index) {
-    if (incompleted.value[selectedTime.value] == undefined) {
-        incompleted.value[selectedTime.value] = []
+// 回退计划
+function backPlan(com, comIndex) {
+    if (!incompleted.value[selectedTime.value]) {
+        incompleted.value[selectedTime.value] = [];
     }
-    incompleted.value[selectedTime.value].push(com)
-    completed.value[selectedTime.value].splice(com_index, 1)
-    // console.log(com, com_index,incompleted.value[selectedTime.value],completed.value[selectedTime.value])
+    incompleted.value[selectedTime.value].push(com);
+    completed.value[selectedTime.value].splice(comIndex, 1);
 }
-function saveToLocal() {
-
-    localStorage.setItem('incompleted', JSON.stringify(incompleted.value));
-    localStorage.setItem('completed', JSON.stringify(completed.value));
-    console.log(incompleted.value, completed.value)
-
-}
-function loadFromLocal() {
-    incompleted.value = JSON.parse(localStorage.getItem('incompleted'))
-    completed.value = JSON.parse(localStorage.getItem('completed')) 
-}
-onMounted(loadFromLocal)
-watch(incompleted ,function (newVal) {
-    localStorage.setItem('incompleted', JSON.stringify(newVal));
-
-} , {deep:true} )
-watch(completed, function (newVal) {
-    localStorage.setItem('completed', JSON.stringify(newVal));
-},{deep:true});
-
-
-let completed_content = []
-async function commit() {
+// 提交计划
+async function commitPlan() {
+    const completedContent = [];
     for (const com of completed.value[selectedTime.value]) {
-        completed_content.push(com.content)
+        completedContent.push(com.content);
     }
-    //将数组转换为字符串且换行
-    const contentString = completed_content.join('\n');
-    // console.log(contentString)
+    const contentString = completedContent.join('\n');
 
     const response = await axios.post('/plan/commit_plan/', {
-        plan_content: contentString
-    })
-    console.log(response)
+        plan_content: contentString,
+    });
+    console.log(response);
 }
 
-const showIncompleted = ref(true)
-const showCompleted = ref(true)
+// 加载计划
+async function loadPlan() {
+    const response = await axios.get('/plan/get_plan/');
+    const plans = response.data.data;
 
-watch(selectedTime, function (newVal, oldVal) {
+    for (const plan of plans) {
+        if (!completed.value[plan.create_time]) {
+            completed.value[plan.create_time] = [];
+        }
+        const contentArr = plan.content.split('\n');
+        for (const content of contentArr) {
+            id.value = uuidv4();
+            completed.value[plan.create_time].push({ id: id.value, content: content });
+        }
+    }
+}
+// 组件挂载时加载计划
+onMounted(loadPlan);
+
+// 根据日期显示完成与未完成计划列表
+watch(selectedTime, (newVal, oldVal) => {
     if (newVal < getTodayDate()) {
-        showCompleted.value = true
-        showIncompleted.value = false
-
+        showCompleted.value = true;
+        showIncompleted.value = false;
+    } else {
+        showCompleted.value = true;
+        showIncompleted.value = true;
     }
-    else {
-        showCompleted.value = true
-        showIncompleted.value = true
-    }
+});
 
-}
-)
+
+
 
 </script>
 
