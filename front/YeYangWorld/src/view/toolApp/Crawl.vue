@@ -100,11 +100,12 @@ async function crawl() {
 }
 
 .body .left_main .crawl_button {
+    background-color: #F6F7F8;
     margin-top: 100px;
     width: 100px;
     height: 50px;
     font-size: 20px;
-    color: #f7efef;
+    color: #f90000;
 }
 
 .body .right_main {

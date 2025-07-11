@@ -77,37 +77,72 @@ import 'v-calendar/style.css';
 import { v4 as uuidv4 } from 'uuid';
 import { ElMessage } from 'element-plus';
 
-//变量管理
+/*
+变量管理
+calendar: 用于存储日历组件的引用，以便后续操作。
 
-// 日历组件的引用
+nowDate: 存储当前日期，用于高亮显示。
+
+selectedDate: 存储用户选择的日期。
+
+selectedTime: 存储用户选择的日期，字符串格式，用于显示和提交。
+
+attributes: 用于配置日历组件，高亮显示今天和选中的日期。
+
+planContent: 存储用户输入的计划内容。
+
+incompleted: 存储所有未完成的计划，以日期为键，计划列表为值。
+
+completed: 存储所有已完成的计划，以日期为键，计划列表为值。
+
+id: 存储唯一ID，用于标识每个计划。
+
+showIncompleted 和 showCompleted: 控制是否显示未完成和已完成的计划列表。
+*/
+
 const calendar = ref(null);
-// 今天日期，Date格式
 const nowDate = ref(new Date());
-// 选中日期，Date格式
 const selectedDate = ref(new Date());
-// 选中日期，string格式
 const selectedTime = ref(getTodayDate());
-// 日历属性配置，用于高亮显示今天的日期
 const attributes = ref([
     { key: 'today', highlight: { fillMode: 'solid' }, dates: nowDate.value },
 ]);
-// 计划内容，string格式
 const planContent = ref('');
-// 全部未完成计划，格式：{date: [{id: 1, content: '学习'}, {···}], ···}
+//格式：{date: [{id: 1, content: '学习'}, {···}], ···}
 const incompleted = ref({});
-// 全部已完成计划，格式：{date: [{id: 1, content: '学习'}, {···}], ···}
+//格式：{date: [{id: 1, content: '学习'}, {···}], ···}
 const completed = ref({});
-// 唯一id
 const id = ref(0);
-// 显示未完成和已完成计划的状态
 const showIncompleted = ref(true);
 const showCompleted = ref(true);
 
 
+/*
+函数管理
 
-//函数管理
+getTodayDate: 获取当前日期，并格式化为字符串。
 
-// 获取今天的日期，string格式
+moveToday: 将日历移动到今天日期，并更新相关变量。
+
+handleSelect: 处理用户选择日期的操作，更新选中日期和显示状态。
+
+createPlan: 创建新计划，并进行输入验证。将计划添加到未完成计划列表中。
+
+deletePlan: 删除未完成的计划。
+
+completePlan: 将未完成的计划标记为已完成，并从未完成列表中移除。
+
+backPlan: 将已完成的计划回退到未完成状态。
+
+commitPlan: 提交已完成的计划到服务器，并进行输入验证。
+
+loadPlan: 从服务器加载已完成的计划，并更新已完成计划列表。
+
+onMounted(loadPlan): 组件挂载时加载计划。
+
+watch(selectedTime): 监听选中日期的变化，并根据日期调整显示状态。
+*/
+
 function getTodayDate() {
     const today = new Date();
     const year = today.getFullYear();
@@ -115,21 +150,21 @@ function getTodayDate() {
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
-// 日历移动到今天日期，并显示今天日期
+
 function moveToday() {
     calendar.value.move(nowDate.value);
     attributes.value = [{ key: 'today', highlight: { fillMode: 'solid' }, dates: nowDate.value }];
     selectedTime.value = getTodayDate();
 }
-// 选择日历中的日期，并显示被选择的日期
+
 function handleSelect(value) {
     selectedDate.value = new Date(value.id);
     attributes.value = [{ key: 'selected', highlight: { fillMode: 'outline' }, dates: selectedDate.value }];
     selectedTime.value = value.id;
 }
 
-// 创建计划
 function createPlan() {
+    //检查
     if (planContent.value === '') {
         ElMessage({
             message: '请输入计划内容',
@@ -147,45 +182,58 @@ function createPlan() {
     if (!incompleted.value[selectedTime.value]) {
         incompleted.value[selectedTime.value] = [];
     }
+
+    //执行
     id.value = uuidv4();
     incompleted.value[selectedTime.value].push({ id: id.value, content: planContent.value });
     planContent.value = '';
 }
-// 删除计划
+
 function deletePlan(incomIndex) {
     incompleted.value[selectedTime.value].splice(incomIndex, 1);
 }
-// 完成计划
+
 function completePlan(incom, incomIndex) {
+    //检查
     if (!completed.value[selectedTime.value]) {
         completed.value[selectedTime.value] = [];
     }
+    //执行
     completed.value[selectedTime.value].push(incom);
     incompleted.value[selectedTime.value].splice(incomIndex, 1);
 }
-// 回退计划
+
 function backPlan(com, comIndex) {
+    //检查
     if (!incompleted.value[selectedTime.value]) {
         incompleted.value[selectedTime.value] = [];
     }
+    //执行
     incompleted.value[selectedTime.value].push(com);
     completed.value[selectedTime.value].splice(comIndex, 1);
 }
-// 提交计划
+
 async function commitPlan() {
+    //检查
+    if (selectedTime.value < getTodayDate()) {
+        alert("不能提交过去日期的计划")
+        return;
+    }
+    if (completed.value[selectedTime.value] == undefined) {
+        ElMessage.warning("请完成计划")
+    }
+    //执行
     const completedContent = [];
     for (const com of completed.value[selectedTime.value]) {
         completedContent.push(com.content);
     }
     const contentString = completedContent.join('\n');
-
     const response = await axios.post('/plan/commit_plan/', {
-        plan_content: contentString,
+        selectedTime: selectedTime.value,
+        planContent: contentString,
     });
-    console.log(response);
 }
 
-// 加载计划
 async function loadPlan() {
     const response = await axios.get('/plan/get_plan/');
     const plans = response.data.data;
@@ -201,10 +249,8 @@ async function loadPlan() {
         }
     }
 }
-// 组件挂载时加载计划
 onMounted(loadPlan);
 
-// 根据日期显示完成与未完成计划列表
 watch(selectedTime, (newVal, oldVal) => {
     if (newVal < getTodayDate()) {
         showCompleted.value = true;
