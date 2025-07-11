@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core.serializers import serialize
 import json
-import datetime
+from datetime import datetime
 
 from userApp.models import DtwzUser
 from planApp.models import PlanCompleted
@@ -18,13 +18,19 @@ def commit_plan(request):
         userid = jwt.verify_token(token)
 
         data = json.loads(request.body)
-        plan_content = data['plan_content']
+        creatDate = datetime.strptime(data['selectedTime'], '%Y-%m-%d').date()
+        planContent = data['planContent']
 
-        # 插入数据
-        PlanCompleted.objects.create(user_id=userid, content=plan_content)
+        if PlanCompleted.objects.filter(user_id=userid, create_time=creatDate).exists():
+            if planContent == '':
+                PlanCompleted.objects.filter(user_id=userid, create_time=creatDate).delete()
+            else:
+                PlanCompleted.objects.filter(user_id=userid, create_time=creatDate).update(content=planContent)
+        else:
+            if planContent != '':
+                PlanCompleted.objects.create(user_id=userid, content=planContent,create_time=creatDate)
         return JsonResponse({'status': 200, 'message': '提交成功'})
-    else:
-        return JsonResponse({'status': 400, 'message': '请求方式错误'})
+
 
 
 @csrf_exempt
@@ -34,7 +40,7 @@ def get_plan(request):
         token = token.split(' ')[1]
         userid = jwt.verify_token(token)
 
-        currentDate = datetime.date.today()
+        currentDate = datetime.today()
         # 查询数据
         plans = PlanCompleted.objects.filter(user_id=userid,create_time__year=currentDate.year, create_time__month=currentDate.month)
         plans_data = [{'id': plan.id, 'content': plan.content, 'create_time': plan.create_time} for plan in plans]
