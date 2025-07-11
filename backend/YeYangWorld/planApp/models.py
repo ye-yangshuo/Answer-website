@@ -7,7 +7,7 @@ class PlanCompleted(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(DtwzUser, on_delete=models.CASCADE, db_comment='用户id')
     content = models.TextField(db_comment='计划内容')
-    create_time = models.DateField(auto_now_add=True, db_comment='创建时间')
+    create_time = models.DateField(db_comment='创建时间')
 
     class Meta:
         managed = True
